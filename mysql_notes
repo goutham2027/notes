@@ -1,0 +1,5 @@
+creating a mysql user and setting privileges
+
+create user '<user_name>'@'localhost' IDENTIFIED BY '<password>';
+Grant all privileges on <db_name>.* to '<user>'@'localhost';
+

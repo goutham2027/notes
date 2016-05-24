@@ -1,0 +1,6 @@
+cpp smart pointers, java threading for writing concurrent applications
+
+how go language handles concurrency without using threading?
+in cpp/java what a thread is? is it binded to a physical  thread, i mean to OS thread.
+why templates in cpp and generics in java are termed very important?
+go lacks genrics or templates. go is closer in spirit to C than to any other language.

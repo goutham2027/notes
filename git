@@ -1,0 +1,2 @@
+to find out number of commits
+git log --oneline --all | wc -l

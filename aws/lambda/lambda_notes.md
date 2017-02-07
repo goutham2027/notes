@@ -33,3 +33,47 @@ Delete a function
 ```
 aws lambda delete-function --function-name hello-cli --profile aws-myaccount
 ```
+
+Lambda functions are private by default. Only the AWS accounts that
+created the account can invoke it or get configuration information from
+it.
+
+push model - service invokes lambda functions
+pull model - lambda itself pulls for events
+
+To get help
+`aws lambda add-permission help`
+
+Get User
+`aws iam get-user --profile aws-myaccount`
+
+Resource policy:
+
+```
+aws lambda add-permission --profile aws-myaccount \
+--function-name pythonObjectMetadata \
+--statement-id 1 \
+--principal s3.amazonaws.com \
+--action lambda:pythonObjectMetadata \
+--source-arn arn:aws:s3:::<bucket-name> \
+--source-account <account-id>
+```
+
+```
+aws lambda get-policy --profile aws-myaccount \
+--function-name pythonObjectMetadata
+```
+
+source-arn, principal changes for other services
+
+giving permission to cross account
+
+get s3 previois notifications
+aws s3api get-bucket-notification-configuration --profile aws-myaccount --bucket <bucket-name>
+
+to delete old notification configuration
+aws s3api put-bucket-notification-configuration --profile aws-myaccount --bucket <bucket-name> --notification-configuration {}
+
+aws s3api put-bucket-notification-configuration --profile aws-myaccount --generate-cli-skeleton
+
+

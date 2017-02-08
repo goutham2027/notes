@@ -1,64 +1,54 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
 
-// other way of creating a compoent.
-class App extends React.Component {
+const HOC = (InnerComponent) => class extends React.Component {
+  componentWillMount() {
+    console.log("Will mount")
+  }
+
   constructor() {
     super();
-    this.state = {val: 0}
-    this.update = this.update.bind(this)
+    this.state = {count:0}
   }
 
   update() {
-    this.setState({val: this.state.val + 1})
-  }
-
-  componentWillMount() {
-    console.log('componentWillMount')
-  }
-
-
-  render() {
-    console.log('render');
-    return <button onClick={this.update}>{this.state.val}</button>
-  }
-
-  componentDidMount() {
-    console.log('componentDidMount')
-  }
-
-  componentWillUnmount() {
-    console.log('componentWillUnmount')
-  }
-}
-
-class Wrapper extends React.Component {
-  mount() {
-    ReactDOM.render(<App />, document.getElementById('a'))
-  }
-
-  unmount() {
-    ReactDOM.unmountComponentAtNode( document.getElementById('a'))
+    this.setState({count: this.state.count +1})
   }
   render() {
     return (
+      <InnerComponent
+        {...this.props}
+        {...this.state}
+        update={this.update.bind(this)}
+      />
+    )
+  }
+}
+
+class App extends React.Component {
+  render() {
+    return (
       <div>
-        <button onClick={this.mount.bind(this)}>Mount</button>
-        <button onClick={this.unmount.bind(this)}>UnMount</button>
+        <Button>button</Button>
+        <hr/>
+        <LabelHOC>label</LabelHOC>
       </div>
     )
   }
 }
 
-/*
- *App.propTypes = {
- *  txt: React.PropTypes.string,
- *  cat: React.PropTypes.number.isRequired
- *}
- *
- *App.defaultProps = {
- *  txt: "this is the default txt"
- *}
- */
+const Button = HOC((props) => <button onClick={props.update}>{props.children}-{props.count}</button>)
 
-export default Wrapper
+class Label extends React.Component {
+  componentWillMount() {
+    console.log("Will mount")
+  }
+  render() {
+    return (
+      <label onMouseMove={this.props.update}>{this.props.children}- {this.props.count}</label>
+    )
+  }
+}
+
+const LabelHOC = HOC(Label)
+
+export default App

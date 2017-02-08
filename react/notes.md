@@ -260,3 +260,228 @@ removed it is called un-mounting.
 
 componentWillMount() - Fired right before it gets mounted into the dom.
 Runs only once.
+componentDidMount()
+componentWillUnmout()
+example
+```js
+class App extends React.Component {
+  constructor() {
+    super();
+    this.state = {val: 0}
+    this.update = this.update.bind(this)
+  }
+
+  update() {
+    this.setState({val: this.state.val + 1})
+  }
+
+  componentWillMount() {
+    console.log('componentWillMount')
+  }
+
+
+  render() {
+    console.log('render');
+    return <button onClick={this.update}>{this.state.val}</button>
+  }
+
+  componentDidMount() {
+    console.log('componentDidMount')
+  }
+
+  componentWillUnmount() {
+    console.log('componentWillUnmount')
+  }
+}
+
+class Wrapper extends React.Component {
+  mount() {
+    ReactDOM.render(<App />, document.getElementById('a'))
+  }
+
+  unmount() {
+    ReactDOM.unmountComponentAtNode( document.getElementById('a'))
+  }
+  render() {
+    return (
+      <div>
+        <button onClick={this.mount.bind(this)}>Mount</button>
+        <button onClick={this.unmount.bind(this)}>UnMount</button>
+      </div>
+    )
+  }
+}
+```
+
+### Manage react component state with lifecycle methods
+clear the values in componentWillUnmount() that are set in componentDidMount()
+
+### Control react component updates when new props are received
+componentWillReceiveProps
+shouldComponentUpdate
+componentDidUpdate
+
+```
+import React from 'react';
+import ReactDOM from 'react-dom';
+
+// other way of creating a compoent.
+class App extends React.Component {
+  constructor() {
+    super();
+    this.state = {increasing: false}
+  }
+  update() {
+    ReactDOM.render(<App val={this.props.val+1}/>, document.getElementById('root'))
+  }
+
+  compoentWillReceiveProps(nextProps) {
+    this.setState({increasing: nextProps.val > this.props.val })
+  }
+
+  shouldComponentUpdate(nextProps, nextState) {
+    return nextProps.val % 5 === 0;
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    console.log(`prevProps: ${prevProps.val}`)
+  }
+  render() {
+    return (
+      <button onClick={this.update.bind(this)}>
+      {this.props.val}
+      </button>
+    )
+  }
+}
+
+
+App.defaultProps = {val: 0}
+```
+
+### React dynamically generated components
+```
+class App extends React.Component {
+  constructor() {
+    super();
+    this.state = {items: []}
+  }
+  componentWillMount() {
+    fetch('http://swapi.co/api/people/?format=json')
+    .then(response => response.json())
+    .then( ({results: items}) => this.setState({items}))
+  }
+  render() {
+    let items = this.state.items
+    return (
+      <div>
+        {items.map(item => <h4 key={item.name}>{item.name}</h4>)}
+      </div>
+    )
+  }
+}
+
+
+export default App
+```
+#### Dynamic filter from list
+```
+import React from 'react';
+
+// other way of creating a compoent.
+class App extends React.Component {
+  constructor() {
+    super();
+    this.state = {items: []}
+  }
+  componentWillMount() {
+    fetch('http://swapi.co/api/people/?format=json')
+    .then(response => response.json())
+    .then( ({results: items}) => this.setState({items}))
+  }
+  filter(e) {
+    this.setState({filter: e.target.value})
+  }
+  render() {
+    let items = this.state.items;
+    if(this.state.filter) {
+      items = items.filter(item =>
+                           item.name.toLowerCase()
+                           .includes(this.state.filter.toLowerCase()))
+    }
+    return (
+      <div>
+        <input type="text"
+        onChange={this.filter.bind(this)} />
+        {items.map(item => <Person key={item.name} person={item} />)}
+      </div>
+    )
+  }
+}
+
+
+const Person = (props) => <h4> {props.person.name} </h4>
+export default App
+```
+
+### Compose React Component Behavior with Higher Order Components
+The purpose of higher order components is to share common functionality,
+information between multiple components. And the sole functionality of
+higher order component is to take in a component and return a component.
+```
+import React from 'react';
+
+const HOC = (InnerComponent) => class extends React.Component {
+  componentWillMount() {
+    console.log("Will mount")
+  }
+
+  constructor() {
+    super();
+    this.state = {count:0}
+  }
+
+  update() {
+    this.setState({count: this.state.count +1})
+  }
+  render() {
+    return (
+      <InnerComponent
+        {...this.props}
+        {...this.state}
+        update={this.update.bind(this)}
+      />
+    )
+  }
+}
+
+class App extends React.Component {
+  render() {
+    return (
+      <div>
+        <Button>button</Button>
+        <hr/>
+        <LabelHOC>label</LabelHOC>
+      </div>
+    )
+  }
+}
+
+const Button = HOC((props) => <button onClick={props.update}>{props.children}-{props.count}</button>)
+
+class Label extends React.Component {
+  componentWillMount() {
+    console.log("Will mount")
+  }
+  render() {
+    return (
+      <label onMouseMove={this.props.update}>{this.props.children}- {this.props.count}</label>
+    )
+  }
+}
+
+const LabelHOC = HOC(Label)
+
+export default App
+```
+

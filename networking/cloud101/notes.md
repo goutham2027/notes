@@ -69,5 +69,67 @@ $ # careful with flood ping without interval, it will send packets as fast as po
 $ sudo ping -i0.05 us-vm2 -c 100 -s 1400 #(send larger packets, does it get slower?)
 ```
 
-Start from here
-https://codelabs.developers.google.com/codelabs/cloud-networking-101/index.html?index=..%2F..%2Findex#7
+### Traceroute
+Tool to trace the path between two hosts.
+Traceroute shows all the layer3 (routing layer) hops between the hosts.
+This is achieved by sending packets to the remote destination with
+incresing TTL (Time to Live) value starting at 1.
+The TTL field in the IP packet gets decreased by 1 at every router and
+once the the TTL hits zero, the packet gets discarded and a "TTL
+exceeded" ICMP message is passed to the sender.
+
+Decreasing of TTL value is to avoid routing loops, as packets cannot
+lopp continuously because the TTL field will eventually decrement at 0.
+By default OS sets the TTL value to a high value (64, 128, 255).
+
+Traceroute sends packets first with TTL value of 1, then TTL value of
+2 and soon, causing these packets to expire at the first/second/etc
+router in the path. It then takes the source IP/host of the ICMP TTL
+exceeded message returned to show the name/IP of the intermediate hop.
+Once the TTL is high enough the packet reaches the destination, and the
+destination responds.
+
+Linux sends UDP packets to a high, unused port.
+
+`traceroute www.icann.org`
+
+Understanding traceroute output.
+* last hop on traceroute is not destination: true for all external
+  examples. The reasons for this is that traceroute performs a reverse
+  DNS lookup for every host in the path. The reverse lookup for the last
+  host might not be implemented or might be different than the name
+  given for the forward DNS.
+
+* traceroute shows only stars at the end: this is means there is
+  probably a firewall in-between blocking either the incoming UDP/ICMP
+  packets or outgoing ICMP or both.
+
+  Note: Traceroute originally named Matt's traceroute(MTR) combines the
+  functions of the traceroute and ping programs.
+  `mtr wikipedia.org`
+
+* Multiple paths showing: traceroute always sends 3 packets with the
+  same TTL and those might be routed over different paths.
+
+* Traceroute shows stars in the middle: because a host in the middle
+  might not respond correctly with TTL exceeded messages or those might
+  be filtered somewhere on the way.
+
+Traceroute to bad.horse is an easter egg and can be build with bunch of
+public IPs. Ref: http://beaglenetworks.net/post/42707829171/star-wars-traceroute
+
+Caveats when working with traceroute/mtr:
+* traceroute only shows the route from source to destination hosts. To
+  get a full picture, we will need to provide traceroute from the source
+  to the destination as well as from destination to the source.
+
+* High latency or even loss on intermediate hops do not necessarily
+  indicate a problem. Many hardware routers treat packets destined
+  for/orginating from the router in software, so they are slow, while
+  packets passing through are forwareded in hardware.
+
+* the number of hops is largely irrelevant and a high number of hops
+  does not indicate a problem.
+
+start from https://codelabs.developers.google.com/codelabs/cloud-networking-101/index.html?index=..%2F..%2Findex#9
+

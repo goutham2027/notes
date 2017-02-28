@@ -19,10 +19,8 @@ vagrant status
 vagrant ssh
 ```
 
-### Defs
-Bridged Networking:
-
-    When enabled, virtualbox connects to one of your installed network cards and exchanges network packets directly, circumventing your host operating system's network stack.
+### Bridged Networking
+When enabled, virtualbox connects to one of your installed network cards and exchanges network packets directly, circumventing your host operating system's network stack.
 
 ## Vagrant networking
 * Forward ports

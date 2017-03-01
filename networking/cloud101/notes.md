@@ -1,3 +1,11 @@
+Note: Most of the notes is from Google Cloud Networking 101
+
+### Ping
+### Traceroute
+### iperf
+### TCPDump
+
+
 ```
 gcloud auth list
 gcloud config list project
@@ -131,5 +139,59 @@ Caveats when working with traceroute/mtr:
 * the number of hops is largely irrelevant and a high number of hops
   does not indicate a problem.
 
-start from https://codelabs.developers.google.com/codelabs/cloud-networking-101/index.html?index=..%2F..%2Findex#9
 
+### Performance testing with iperf
+iPerf is to measure the maximum achievable bandwidth on IP networks.
+
+iPerf supports tuning of various parameters related to timing, buffers,
+and protocols.
+
+Using iperf we can test the performance between two hosts.
+
+To test make one node as iperf server to accept connections.
+```
+# server mode
+$ iperf -s
+
+# to run in client mode and connect to server
+$ iperf -c <iperf server>
+```
+
+We can increase bandwidth between hosts by using UDP.
+```
+# on server
+$ iperf -s -u
+
+# on client
+$ iperf -c <iperf server> -u -b 2G
+```
+
+Higher speeds can be achieved by running a bunch of TCP iperfs in
+parallel. The combined bandwidth should be really close to the maximum
+achievable bandwidth.
+```
+$ iperf -s
+
+# on client
+$ iperf -c <iperf server> -P 20
+```
+
+To reach the maximum bandwidth, it's not sufficient by running a single
+TCP stream (eg: file copy), we need to have several TCP sessions in
+parallel.
+Explore TCP parameters: window size and slow start.
+
+With bbcp (https://github.com/eeertekin/bbcp) we can copy files as fast as possible by parallelizing
+transfers and window size is also configureable.
+
+
+### TCPDump
+TCPDump captures network traffic(packets). Useful in debugging network
+issues.
+
+```
+# collects 1000 packets.
+$ sudo tcpdump -c 1000 -i eth0 not tcp port 22
+```
+
+Good practice to pass -c parameter 

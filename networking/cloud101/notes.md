@@ -4,7 +4,7 @@ Note: Most of the notes is from Google Cloud Networking 101
 ### Traceroute
 ### iperf
 ### TCPDump
-
+### Firewall and load balancing in google cloud
 
 ```
 gcloud auth list
@@ -194,4 +194,99 @@ issues.
 $ sudo tcpdump -c 1000 -i eth0 not tcp port 22
 ```
 
-Good practice to pass -c parameter 
+Good practice to pass -c parameter
+
+```
+# packet capture for http request.
+sudo tcpdump -i eth0 -s 1460 -w webserver.pacp tcp port 80
+
+# analyzing the packet capture file
+# shows basic protocol, source and destination.
+# wireshark and cloudshard can be used to get more information
+sudo tcpdump -nr webserver.pacp
+```
+
+### Firewall and load balancing in google cloud
+
+```
+# to get gcloud compute instances
+$ gcloud compute instances list
+```
+
+Lab exercise: Install nginx on  us-vmc compute instance and run it on
+port 81.
+To run on port 81 use: `echo "server { listen 81; root /usr/share/nginx/html; }" > /etc/nginx/sites-enabled/default`
+
+But from external hosts us-vmc ip is not reachable. Update the firewall
+rule.
+
+Solution:
+To open the GCE firewall, we need to give the following information:
+* source ip range or tags (will will open for the internet 0.0.0.0/0)
+* destination protocol and port (tcp:81)
+* destination tags (we will have to create if we don't want to open port
+  on all vms)
+* network (codelab)
+
+```
+# to create the tag nginx-81
+$ gcloud compute instances add-tags us-vmc --tags nginx-81 --zone us-central1-c
+# to open the port
+$ gcloud compute firewall-rules create nginx-81 --allow tcp:81 --network codelab --source
+-ranges 0.0.0.0/0 --target-tags nginx-81
+```
+
+#### Network Load Balancer (lb)
+The Network lb is a Layer3 lb which provides IP packets for a certain
+port to a target pool of multiple instances. This is done by forwarding
+rules. Forwarding rules can also forward traffic to a single instance
+(which gives it additional external IPs without NAT).
+
+Network lb is regional, it can span multiple zones but not regions.
+
+The traffic is forwarded as is and responses are sent from the instance
+directly to the source of the connection. For this the load
+balancer/forwarding rule IP gets added to the instances which are the
+target for the load balancer.
+
+Exercise
+```
+# installing a web server (on jumphost)
+ $ for a in us-vm1 us-vmc eu-vm asia-vm ; do gcloud compute ssh --command "sudo apt-get -y install apache2" --zone `gcloud compute instances list $a --format text | grep zone: | awk '{print $2}'` $a; done
+
+ # for centos (on jumphost)
+ $ gcloud compute ssh --ssh-flag="-t" --command "sudo yum -y install httpd; sudo service httpd start" --zone us-central1-f us-vm2
+
+ # to verify apache2 is installed
+ $ for a in us-vm1 us-vm2 us-vmc eu-vm asia-vm ; do curl $a; done
+
+ # before creating the US loadbalancer we need to open the firewall to
+ all instances.
+  $ gcloud compute firewall-rules create http --allow tcp:80 --network codelab
+```
+
+A network lb consists of a
+ * target pool of machines in one region. In
+our example we will be creating a lb for all US instances.
+ * a http health check to check if those machines are healthy (default
+   check on port 80 and path /)
+ * forwarding rule that gives us external ip pointing at this pool of
+   instances.
+
+```
+$ gcloud compute http-health-checks create basic-check
+$ gcloud compute target-pools create apaches --region us-central1 --health-check basic-check
+$ gcloud compute target-pools add-instances apaches --instances us-vm1,us-vm2 --zone us-central1-f
+$ gcloud compute target-pools add-instances apaches --instances us-vmc --zone us-central1-c
+$ gcloud compute forwarding-rules create interwebs --region us-central1 --port-range 80 --target-pool apaches
+```
+
+The last command returns the ip address which is the load balancer ip
+address.
+
+```
+# to modify index.html to display IP address
+ for a in us-vm1 us-vmc eu-vm asia-vm ; do gcloud compute ssh --command "sudo hostname | sudo tee /var/www/html/index.html > /dev/null" --zone `gcloud compute instances list $a --format text | grep zone: | awk '{print $2}'` $a; done
+```
+
+exercise create the n/w load balancer for both eu-vm and asia-vm

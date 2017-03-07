@@ -290,3 +290,94 @@ address.
 ```
 
 exercise create the n/w load balancer for both eu-vm and asia-vm
+```
+# to directly add a forwarding rule to the single instance
+$ gcloud compute target-instances create eu-target --instance eu-vm --zone europe-west1-d
+$ gcloud compute forwarding-rules create interwebs-eu --region europe-west1 --port-range 80 --target-instance eu-target --target-instance-zone europe-west1-d
+```
+
+#### Notes on HTTP load balancer:
+The HTTP load balancer is a layer 7 lb. the tcp session gets terminated
+by the lb and proxies the traffic to the target instances. responses also get proxied through the lb.
+layer 7 lb can be used as a global lb where packets are always forwarded
+to the closes region
+
+http load balancer currently does not support session affinity. what is
+session affinity?
+
+
+Setting up global load balancer across all VMs
+https://www.dropbox.com/s/w09jldcm4mb6t7l/Screenshot%202017-03-07%2009.13.47.png?dl=0
+
+To achieve this we need to build the system from the target to the
+beginning.
+
+step-1: setup an instance group for every zone, as the HTTP load
+balancer balances between instance groups. we are using unmanaged
+(non-autoscaled_ instance group.
+`gcloud compute instance-groups unmanaged create us-f --zone us-central1-f`
+
+step-2: add instances to the instance group
+`gcloud compute instance-groups unmanaged add-instances us-f --instances us-vm1,us-vm2 --zone us-central1-f`
+
+step-3: add named port (http) to each newly created instance group.
+`gcloud compute instance-groups unmanaged set-named-ports us-f --named-ports http:80 --zone us-central1-f`
+
+step-4: create a backend service containing all those instance groups
+and add an URL map pointing all URLs to this backend service.
+```
+gcloud compute backend-services create global-bs --protocol http --http-health-check basic-check
+gcloud compute backend-services add-backend global-bs --instance-group us-f --zone us-central1-f
+gcloud compute url-maps create global-map --default-service global-bs
+```
+
+step-5: finally we create a target proxy and point a forwarding rule
+with a global ip to the target proxy
+```
+$ gcloud compute target-http-proxies create global-proxy --url-map global-map
+$ gcloud compute forwarding-rules create global-lb --global --target-http-proxy global-proxy --ports 80
+```
+
+The last command returns the IP. This IP will take user to the closest
+instance.
+
+By default the logs shows the lb ip. to surface the ips in the log run
+the following commands.
+```
+# for debian based
+$ sed -e 's/%h/%{X-Forwarded-For}i/' /etc/apache2/apache2.conf | sudo tee /etc/apache2/apache2.conf > /dev/null
+$ sudo service apache2 reload
+
+# for centos based
+$ sudo sed -e 's/%h/%{X-Forwarded-For}i/' /etc/httpd/conf/httpd.conf | sudo tee /etc/httpd/conf/httpd.conf > /dev/null
+$ sudo service httpd reload
+```
+
+### https load balancer
+http lb can be converted to https using a certificate.
+steps to create a self signed certificate
+```
+$ mkdir ssl
+$ cd ssl
+$ openssl genrsa -out my.key 2048
+$ openssl req -new -key my.key -out my.csr #Enter data at each prompt except PW
+$ openssl x509 -req -days 365 -in my.csr -signkey my.key -out my.crt
+
+$ gcloud compute ssl-certificates create ssl --certificate my.crt --private-key my.key
+
+# create target https proxy and a forwarding rule
+$ gcloud compute target-https-proxies create ssl-proxy --url-map global-map --ssl-certificate ssl
+$ gcloud compute forwarding-rules create ssl-lb --global --target-https-proxy ssl-proxy --ports 443
+```
+
+
+
+### GCE specific settings to instances
+TCP keepalive settings: default: 10 mins
+To change this use the following command.
+`$ sudo /sbin/sysctl -w net.ipv4.tcp_keepalive_time=60 net.ipv4.tcp_keepalive_intvl=60 net.ipv4.tcp_keepalive_probes=5`
+
+
+cleanup script source <(curl -s https://storage.googleapis.com/nw101/cleanup.sh)
+
+google cloud networking: https://cloud.google.com/compute/docs/networking?hl=en

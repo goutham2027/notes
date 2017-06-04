@@ -1,4 +1,4 @@
-linuxacademy elastic beanstalk course
+Linuxacademy elastic beanstalk course
 
 ### what is a virtual machine (VM)?
   * emulation of computer system type.
@@ -52,5 +52,42 @@ linuxacademy elastic beanstalk course
     - launch environment
     - manage environment
 
+### Docker install and configure
+```
+sudo apt-cache search dock
+sudo apt-get install docker.io
+### cgroup-lite
+sudo apt-get install cgroup-lite
+sudo usermod -a -G docker user
+docker images
+docker pull hello-world:latest
+docker run hello-world
+```
 
+### Docker command line and basics
+```
+docker --version
+docker pull centos:latest
+# i - interactive
+# t - terminal
+docker -it centos:latest bash
+docker ps
+docker ps -a
+# to stop a container exit the container or stop the container using the
+following docker command
+docker stop <name_of_the_container>
+# to start the container
+docker start <name_of_the_container>
+docker attach <name_of_the_container>
+# commiting container changes
+docker commit -m "commit msg" centos:updated
+# to remove containers
+docker rm <container_name>
+# to remove image
+docker rmi <image_name>
 
+# pushing docker images
+docker login
+docker tag centos:updated goutham2027/centos:updated
+docker push goutham2027/centos:updated
+```

@@ -91,3 +91,24 @@ docker login
 docker tag centos:updated goutham2027/centos:updated
 docker push goutham2027/centos:updated
 ```
+
+### Installing the AWS CLI and EB CLI tools
+```
+sudo apt-get install python-dev libxml2-dev libxslt1-dev zlib1g-dev
+sudo apt install python-pip
+sudo pip install awscli
+sudo pip install awsebcli
+```
+
+
+### Elastic Beanstalk accounts and groups
+create ebadmin, ebuser roles and users
+
+configure aws
+```
+aws configure
+# to test aws settings
+aws ec2 describe-regions
+# to init eb application
+eb init
+```

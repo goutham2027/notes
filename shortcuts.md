@@ -16,4 +16,11 @@ w - change branch
 l - line number
 
 
+#### slack
+`cmd + k` - to navigate to person/channel
+
+`cmd + <number>` - to select different slack account
+
+`+<emoji>` - add reaction to previous message
+eg: `+:+1:`
 

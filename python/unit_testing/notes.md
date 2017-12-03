@@ -376,3 +376,42 @@ make the argument has default value as None or empty object.
 - a mock is as a stub, and additionally verifies interactions
 - a test spy lets you query afterwards to find out what happened
 - a dummy is for when the interface requires an argument.
+
+
+-----------
+monkeypatching: sometimes it's not convenient to use test doubles and
+code isn't designed to use anything other than the production version of
+the class/component, and it is difficult to insert the test double.
+
+when we dynamically change the attribute or a piece of code at runtime.
+We exchange the code with the real code - some people call it metaprogramming.
+
+
+```python
+class Alarm(object):
+  def __init__(self):
+    self._sensor = Sensor()
+
+   def check(self):
+    ...
+
+
+# monkeypatching
+def test():
+  with patch('alarm.Sensor') as test_sensor_class:
+    .........
+      test_sensor = Mock()
+      test_sensor_instance.sample_pressure.return_value = 22
+      test_sensor_class.return_value=test_sensor_instance
+
+```
+can also be used with decorator
+`@patch("alarm.Sensor")`
+
+important note: the patch function takes a string not the actual class name.
+Sensor is defined in another module but we want to patch it in the alarm
+module.
+
+  we've to tell the patch which module will get the test double not
+  which module the class lives in.
+

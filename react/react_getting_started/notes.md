@@ -21,3 +21,8 @@ react refs?
 /*
            *ref={(input) => this.userNameInput = input}
            */
+
+refs and controlled components
+passing functions to child components
+
+jscomplete.com

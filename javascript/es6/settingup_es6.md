@@ -1,6 +1,7 @@
-- compile es6 to es2015 using babel
-- write tests to es2016
-- setup linter
+## TODO:
+- compile es6 to es2015 using babel - Done
+- setup linter - Done
+- write tests to es6
 
 ## JavaScript Fundamentals for ES6
 PluralSight course - Scott Allen, Joe Eames
@@ -181,7 +182,8 @@ class Employee extends Person {
   }
 }
 ```
-### Overriding method behavior
+
+#### Overriding method behavior
 ```
 class Person {
   doWork = {}

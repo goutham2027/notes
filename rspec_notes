@@ -1,0 +1,51 @@
+describe
+context
+let
+its
+subject
+mock - fake implementation of an object
+double - a newer term to represent an object that stands in for another object
+stub - fake implementation of a method
+factories
+fixtures
+
+http://benscheirman.com/2011/05/dry-up-your-rspec-files-with-subject-let-blocks/
+subject: Subject blocks allow you to control the initialization of the subject under test. If you don’t have any custom initialization required, then you’re given a default `subject` method already. All it does is call `new` on the class you’re testing
+
+let: Let blocks allow you to provide some input to the subject block that change in various contexts. This way you can simply provide an alternative `let` block for a given value and not have to duplicate the setup code for the subject over again. Let blocks also work inside of `before :each` blocks if you need them.
+
+Its: Its blocks allow you to test methods on the subject that return a simple value. The benefit of using this over the more wordy version above is that it can actually format the test output for you.
+
+
+describe Card do
+  subject do
+    Card.new(card_type)
+  end
+  
+  describe "#value" do  
+    context "Two of Hearts" do
+      let(:card_type) { "2H" }
+      its(:value) { should == 2 }
+    end
+
+Model validation
+* Testing uniqueness
+	object.valid?
+	expect(object.errors[:field].size).to eq(1)
+
+Rspec mocks, double, stubs
+https://semaphoreci.com/community/tutorials/mocking-with-rspec-doubles-and-expectations
+http://stackoverflow.com/a/15252724
+
+Test Double
+A test double is a simplified object which takes the place of another object in a test. Creating a double with RSpec is easy:
+feed = double
+
+Method Stubs
+A new double resembles a plain Ruby Object — it's not very useful on its own. It is usually the first step before defining some fake methods on it. This is called method stubbing, and with RSpec 3 it is done using the allow() and receive() methods:
+
+allow(feed).to receive(:fetch).and_return("imagine I'm a JSON string")
+
+feed.fetch
+=> "imagine I'm a JSON string"
+

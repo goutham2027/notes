@@ -17,5 +17,6 @@ What makes up the ECS?
 * containers
   a linux container created as part of a task
 
-
-
+Setting up
+* create a user (ecs-admin)
+* create a group (ecsadmins) with ecs related info

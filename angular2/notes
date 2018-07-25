@@ -1,0 +1,6 @@
+TypeScript is a superset of JavaScript ES6 that adds types.
+
+To compile typescripts - tsc
+Compiling on every change - tsc --watch
+
+

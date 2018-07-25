@@ -445,4 +445,284 @@ all the methods and properties that have been marked as abstract.
 
 eg: `Vehicle.register(Car)`
 
+## The Function
+Python functions are either named or anonymous. In Python, functions
+are first class objects.
+
+Which means, functions can be:
+ - used as values,
+ - assigned to variables
+ - used as arguments to other function
+ - returned from method/function calls just like python value eg:
+   string, numbers.
+
+
+### Function Definitions
+```
+def square(x):
+  return x**2
+```
+
+When a function definiton gets encountered, only the function definition
+statement, the is `def square(x)` is executed, this implies that all
+arguments are evaluated. The function definition does not execute
+the function body; this gets executed only when the function is called.
+
+# TODO
+** Try to understand this paragraph
+
+The execution of a function definition binds the function name in
+the current name-space to a function object which is a wrapper around
+the executable code for the function. This function object contains a
+reference to the current global namespace which is the global
+name-space that is used when the function is called.
+
+Python also supports anonymous functions which are created using
+`lambda` keyword.
+```
+square = lambda x: x**2
+```
+
+Lambda expressions return function objects after evaluation and
+have the same attributes as named functions. Used for very simple
+functions.
+
+### Functions are objects
+`type(square) # <class function>`
+
+Like every other object, introspection on function using dir()
+function provides a full list of function attributes.
+
+Functions that take other functions as arguments are commonly referred
+to as higher order functions and these form a very important part of
+functional programming.
+Example for higher order functions is the map function takes a function and an iterable and
+applies the function to each item in the iterable returning a new
+list.
+eg: `map(square, range(10)) # [0, 1, 4, ... 81]`
+
+A function can be defined inside another function as well as returned
+from a function call.
+
+### Functions are descriptors
+Functions has `__get__` method making them non-data descriptors.
+
+The `__get__` method is called whenever a function is referenced and
+provides a mechanism for handling method calls from object and ordinary
+function calls. This descriptor characteristic of a function enables
+functions to return either itself or a bound method when referenced
+depending on where and how it is referenced.
+
+### Calling functions
+
+Python functions can also be called using variable number of arguments
+than the regular way with normal arguments.
+These variable number of arguments come in 3 flavors.
+
++ Default Argument Values:
+eg:
+```
+def def_args(arg, arg1=1, arg2=2)
+```
+
+To be careful when using mutable data structures as default arguments.
+Function definition get executed only once so these mutable data
+structures are created once at definition time. This means that the same
+data structure is used for all function calls.
+
+eg:
+```
+def show_args_using_mutable_defualts(arg, def_arg=[]):
+  def_arg.append('Hello world!")
+  return "arg={}, def_arg={}".format(arg, def_arg)
+
+>>> show_args_using_mutable_defualts("test")
+"arg=test, def_arg=['Hello World']"
+
+>>> show_args_using_mutable_defualts("test")
+"arg=test, def_arg=['Hello World', 'Hello World']"
+```
+
+On every function call, "Hello World~" is added to the `def_arg` list.
+
++ Keyword Argument:
+Functions can be called using keyword argumets of the form
+`kwarg=value`.
+In a function call, keyword arguments must not come before non-keyword
+arguments.
+
++ Arbitary arguments list:
+`*args`
+The arguments are all bundled together into a tuple that can be
+accessed via the `args` argument.
+`def abc(file, sep, *args)`
+
+### Unpacking function argument
+Arguments for a function call are either in a tuple, a list or a dict.
+These arguments can be unpacked into functions for function calls
+using * or ** operators.
+
+If the values for a function call are in a list then these values can be
+unpacked directly into the function using *list
+eg:
+```
+def print_args(a,b):
+  print a
+  print b
+
+>>> args = [1,2]
+>>> print_args(*args)
+```
+
+Dictionaries can be used to store `keyword to value` mapping and the **
+operator is used to unpack the keyword arguments to the functions
+eg:
+```
+def parrot(voltage, state='a stiff', action='voom'):
+  pass
+
+>>> d = {'voltage': '4', 'state': 'abc', 'action': 'VOOM'}
+>>> parrot(**d)
+```
+
+*args - represents unknown length of sequence of postiional
+arguments while **kwargs represents a dict of keyword name value
+mappings which may contain any amount of keyword name value mapping.
+
+*args must come before **kwargs in the function definition.
+
+### Nested functions and closures
+eg: `ex_nested_functions.py`
+In nested functions such as in the example, a new instance of the nested
+function is created on each call to outer function. This is because
+during each execution of the make_counter function, the definition of
+the counter function is executed but the body is not executed.
+
+When nested functions reference variables from the outer function in
+which they are defined, the nested function is said to be closed over
+the referenced variable.
+
+python3 introduced `nonlocal` keyword to fix the closure scoping issue.
+Closures can be used for maintaining states and for simple cases provide
+a more succinct and readable solutions than classes.
+eg: `ex_closures.py`
+
+### A byte of functional programming
+side effects: object values do not change once they are created and to
+reflect a change in an object value, a new object with the changed value
+is created.
+example of a function with side effects
+```
+def squares(numbers):
+  for i, v in enumerate(numbers):
+    numbers[i] = v**2
+  return numbers
+```
+
+The same function can be implemented without any modification to
+arguments and create new values.
+```
+def squares(numbers):
+  return map(lambda x: x**x, numbers)
+```
+
+Python provides built-in functions such as map, filter and reduce that
+aid in functional programming.
+
+1) map(func, iterable): takes a function and an iterable and returns an
+interator that applies the function to each item in the iterable.
+
+2) filter(func, iterable): returns an iterator that applies func to each
+element of the iterable and returns elements of the iterable for which
+the result of the application is True.
+eg:
+```
+even = lambda x: x%2 == 0
+even(10) # True
+list(filter(even, range(10)) # [0, 2, 4, 6, 8]
+```
+
+3) reduce(func, iterable[, initializer]): moved to functools in python3.
+reduce function applies func cumulatively to the items in iterable in
+order to get a single value and returns that value. `func` takes two
+positional arguments.
+eg:
+```
+reduce(lambda x, y: x+y, [1,2,3,4,5])
+# calculates ((((1+2)+3)+4)+5)
+```
+reduce function starts with reducing the first 2 args then reduces the
+third with the result of the first two and soon.
+eg:
+```
+def flatten_list(nested_list):
+  add_lists = lambda x,y: x + y
+  return reduce(add_lists, nested_list, [])
+
+flatten_list([1,2,3], [4,5,6]) # [1,2,3,4,5,6]
+```
+
+#### Comprehensions
+Python comprehensions are syntactic constructs that enable sequences to
+be built from other sequences in a clear and concise manner.
+3 types of comprehensions:
+- List comprehension
+- Set comprehension
+- Dictionary comprehension
+
+List comprehension
+
+provide a concise way to create new list of elements that satisfy a
+given condition from an iterable.
+eg:
+`squares = [x*x for x in range(10)]
+
+Set Comprehensions
+eg: `x = {i**2 for i in range(10)}`
+
+Dict Comprehensions
+eg: `x = {i: i**2 for i in range(10)}`
+
+#### Functools
+`functools` module in Python contains a few higher order functions that
+act on and return other functions.
+
+partial(func, *args, **kwargs): when called returns an object that can
+be called like the original `func` argument with *args and **kwargs as
+arguments.
+eg:
+```
+from functools import partial
+basetwo = partial(int, base=2)
+basetwo.__doc__ = "convert base 2 string to an int"
+basetwo('100') # 4
+```
+A new callable `basetwo` takes a number in binary and converts
+to decimal. int() functions that takes two arguments has been wrapped by
+a callable, `basetwo` that takes only one argument.
+
+singledispatch: decorator that changes a function into a single
+dispatch generic function. Handle dynamic overloading in which a
+single function can handle multiple types.
+A generic function is defined with the @singledispatch function,
+the register decorator is then used to define functions for each type
+that is handled. Dispatch to the correct function is carried out based
+on the type of the first arg to the function call - hence the name
+single generic dispatch
+eg:
+```
+@singledispatch
+def fun(arg, verbose=False):
+  if verbose:
+    print("Let me just say", end="")
+  print(arg)
+
+@fun.register(int)
+def _(arg, verbose=False):
+  if verbose:
+    print("Strength in number", end="")
+  print(arg)
+```
+
+## Iterators and Generators
 

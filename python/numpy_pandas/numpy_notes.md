@@ -265,5 +265,89 @@ operations on data in ndarrays.
 Many `ufuncs` are simple element-wise transformations like `sqrt` or
 `exp`.
 
+## May 16, 2018 - Wednesday
 ### Array-Oriented programming with Arrays
+- Numpy array enables us to express many kinds of data processing tasks as
+concise array expressions that might otherwise require writing loops.
+This practice of replacing explicit loops with array expressions is
+commonly referred to as vectorization.
 
+- Vectorized array operations will often be one or two times faster than
+  pure Python equivalents.
+
+- The `numpy.where` function is vectorized version of the ternary
+  expression `x if condition else y`.
+
+```
+xarr = np.arange(1.1, 1.6, 0.1)
+yarr = np.arange(2.1, 2.6, 0.1)
+cond = np.array([True, False, True, True, False])
+
+# take a value form xarr whenever the corresponding value in cond is True else take value from yarr
+
+# list comprehension implementation
+# cons with this approach:
+# - Will not be very fast for large arrays because all the work is being done in interpreted Python code.
+# - This implementation will not work with multi dimensional arrays.
+result = [(x if c else y) for x, y, c in zip(xarr, yarr, cond)]
+print("list comprehension: {}".format(result))
+%timeit [(x if c else y) for x, y, c in zip(xarr, yarr, cond)]
+
+# np.where implementation
+result = np.where(cond, xarr, yarr)
+print("np.where: {}".format(result))
+%timeit np.where(cond, xarr, yarr)
+```
+
+- 2nd and 3rd arguments to `np.where` can also be scalars.
+
+### Mathematical and Statistical methods
+```
+# Mathematical and Statistical methods
+arr = np.random.randn(4,5)
+print(arr)
+print("Mean: {}".format(arr.mean()))
+print("Sum: {}".format(arr.sum()))
+
+# Functions like mean, sum take an optional axis argument that computes the
+# statistic over the given axis.
+
+# the following 2 lines compute mean, sum across the columns
+print("Mean on axis=1: {}".format(arr.mean(axis=1)))
+print("Sum on axis=1: {}".format(arr.sum(axis=1)))
+
+# compute sum across the rows
+print("Sum on axis=0: {}".format(arr.sum(axis=0)))
+```
+
+### Methods for Boolean arrays
+```
+# methods for boolean array
+
+arr = np.random.randn(100)
+bools = arr > 0
+
+# boolean values are coerced to 1 (True) or 0 (False).
+# sum is often used as a means of counting True values in a boolean arrzay.
+(arr > 0).sum()
+
+# any, all
+
+print("any: {}".format(bools.any()))
+
+print("all: {}".format(bools.all()))
+```
+
+### unique, intersection
+```
+arr1 = np.random.randint(10, size=(100))
+arr2 = np.random.randint(5, size=(100))
+
+# unique
+print(np.unique(arr))
+
+# intersection
+print(np.intersect1d(arr1, arr2))
+```
+
+### File input and output with Arrays

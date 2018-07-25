@@ -10,6 +10,9 @@ name = "pypi"
 ipython = "*"
 numpy = "*"
 jupyter = "*"
+pandas = "*"
+pytz = "*"
+ipykernel = "*"
 
 
 [dev-packages]

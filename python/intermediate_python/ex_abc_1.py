@@ -8,9 +8,9 @@ class Vehicle(object):
     def change_gear(self):
         pass
 
-    @abstractmethod
-    def start_engine(self):
-        pass
+    # @abstractmethod
+    # def start_engine(self):
+        # pass
 
 
 class Car(Vehicle):
@@ -19,6 +19,8 @@ class Car(Vehicle):
         self.model = model
         self.color = color
 
+    def change_gear(self):
+        pass
 
 car = Car("Toyota", "Corolla", "black")
 print car.make

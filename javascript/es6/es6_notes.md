@@ -1,4 +1,4 @@
-## TODO:
+## TODO
 - compile es6 to es2015 using babel - Done
 - setup linter - Done
 - write tests to es6

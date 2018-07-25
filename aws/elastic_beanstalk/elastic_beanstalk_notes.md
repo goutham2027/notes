@@ -111,4 +111,16 @@ aws configure
 aws ec2 describe-regions
 # to init eb application
 eb init
-```
+
+### Understanding elastic beanstalk environment
+#### scaling group
+  environment type: single instance, load balanced
+
+  autoscaling: configure autoscaling options
+
+  scaling trigger: configure auto scaling options
+
+  time based scaling: auto scale based on schedule
+
+#### instances
+  modify instance types and attach keypair to ssh into instance.

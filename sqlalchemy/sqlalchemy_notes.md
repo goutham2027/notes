@@ -50,7 +50,7 @@ SQLAlchemy is like an Onion
 
 
 
-## Engine, Connection, Transactions
+## Level1: Engine, Connection, Transactions
 
 The job of Engine is to deal with he Python DBAPI (PEP-0249).
 PEP - Python Enhancement Protocol
@@ -98,4 +98,97 @@ emp_name="gp")
 trans.commit()
 conn.close()
 ```
+we need connection when we do transaction because the transaction
+happens in one connecton at a time.
 
+The short hand version of this is to use context manager.
+```python
+with engine.begin() as conn:
+  conn.execute("<query>")
+  conn.execute("<query>")
+```
+
+using bound parameters is the best practice. Prevents sql injection
+attacks, and there is efficiency using bound practice.
+
+#### Engine facts
+* Executing via the Engine directly is call connectionless execution -
+  the Engine connects and disconnects for us.
+* Using a `Connection` is called explicit execution. We control the span
+  of a connection in use.
+* Engine usually uses a connection pool, which means "disconnecting"
+  often means the connection is just returned to the pool.
+* The SQL we send to engine.execute() as a string is not modified, is
+  consumed by the DBAPI verbatim (in exactly the same words as used
+  originally)
+
+## Level2: Table, Metadata, Reflection, DDL
+Metadata: Describes the structure of the db, i.e. tables, columns,
+constraints interms of data structures in Python.
+  Serves as the basis for SQL generation and object relational mapping.
+  Can generate to a schema.
+  Can be generate from a schema.
+
+```python
+from sqlalchemy import MetaData, Table, Column, Integer, String, ForeignKey
+metadata = MetaData()
+user_table = Table(
+  'user', metadata,
+  Column('id', Integer, primary_key=True),
+  Column('name', String),
+  Column('fullname', String),
+)
+# to create table in the db
+metadata.create_all(engine)
+
+# Foreign key
+address_table = Table(
+  'address', metadata,
+  Column('id', Integer, primary_key=True),
+  Column('email_address', String),
+  Column('user_id', Integer, ForeignKey('user.id')),
+)
+```
+
+### Reflection
+Go check the db and fetch the columns from the DB.
+```python
+metdadata = Metadata()
+user_reflected = Table('user', metadata, autoload=True, autoload_with=engine)
+# output
+print(user_reflected)
+Table('user', MetaData(bind=None), Column('id', INTEGER(), table=<user>, primary_key=True, nullable=False), Column('name', VARCHAR(), table=<user>), Column('fullname', VARCHAR(), table=<user>), schema=None)
+```
+
+### Inspector object - if we want more specific information
+```python
+from sqlalchemy import inspect
+inspector = inspect(engine)
+inspector.get_table_names()
+inspector.get_columns('address')
+```
+
+Basic Types
+Integer - INT
+String - VARCHAR
+Unicode - VARCHAR, NVARCHAR
+Boolean - BOOLEAN, INT, TINYINT
+DateTime - DATETIME or TIMESTAMP
+Float - floating point values
+Numeric - precision numbers using Python Decimal
+
+```python
+# metadata create_all and drop_all will sort the correct hierarchy
+# incase of foreign keys. The otherway to do is drop all constraints,
+# but not all DBs support that.
+metadata.create_all(engine, checkfirst=<True|False>)
+table.create(engine, checkfirst=<True|False>)
+metadata.drop_all(engine, checkfirst=<True|False>)
+table.drop(engine, checkfirst=<True|False>)
+```
+
+### SQL Expressions
+The SQL Expression system build upon Table Metadata in order to compose
+SQL statements in Python.
+
+start from 1:04

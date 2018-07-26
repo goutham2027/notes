@@ -198,3 +198,62 @@ class Employee extends Person {
 ```
 
 ### 3. Functional Programming
+#### Arrow functions
+```
+let add = (x, y) => x + y;
+
+let three = () => 3;
+
+// multiline
+let add = (x, y) => {
+  let temp = x + y;
+  return temp
+}
+
+var numbers = [1,2,3,4];
+var sum = 0;
+numbers.forEach(n => sum += n);
+
+var doubled = numbers.map(n => n * 2);
+
+// arrow functions and async
+```
+
+Arrow functions will always capture the `this` value of the context that
+they are inside. It lexically binds to `this`.
+
+#### Iterables and Iterators
+Iterable `[1, 2, 3, 4]`
+
+Retrieve an iterator on Iterable.
+Iterator has next() which returns `{value: <>, done: <bool>}`
+```
+eg: [1, 2, 3, 4]
+next()
+{value: 1, done: false}
+{value: 2, done: false}
+{value: 3, done: false}
+{value: 4, done: false}
+{value: undefined, done: true}
+```
+
+#### for of
+`for of` uses iterator
+```
+let numbers = [1, 2, 3, 4];
+for (let i of numbers) {
+    console.log(i);
+}
+```
+
+Building an Iterable
+
+#### Generators
+A generator function is a function which generates an iterator.
+
+```
+let numbers = function*() {
+  yield 1;
+  yield 2;
+}
+```

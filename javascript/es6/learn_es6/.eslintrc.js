@@ -3,5 +3,8 @@ module.exports = {
     env: {es6: true},
     rules: {
         "require-jsdoc": "off"
+    },
+    parserOptions: {
+        "sourceType": "module"
     }
 };

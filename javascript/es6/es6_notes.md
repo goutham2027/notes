@@ -1,7 +1,8 @@
 ## TODO
 - compile es6 to es2015 using babel - Done
 - setup linter - Done
-- write tests to es6
+- write tests to es6 - Done
+- require vs import
 
 ## JavaScript Fundamentals for ES6
 PluralSight course - Scott Allen, Joe Eames
@@ -257,3 +258,192 @@ let numbers = function*() {
   yield 2;
 }
 ```
+
+```
+// implementation of range generator
+let range = function*(start, end) {
+  let current = start;
+  while(current <= end) {
+    let delta = yield current;
+    current += delta || 1;
+  }
+}
+```
+
+#### Comprehensions
+```
+var numbers = [for (n of [1, 2, 3, 4]) n * n]
+console.log(numbers)
+
+yield* array // yield each element in the array instead of entire
+array
+
+```
+Use Generator Comprehensions whenever possible.
+
+### 4. Built-in Objects
+
+#### Numbers
+```
+// ES5
+var a = 10;
+var hexd = 0xa;
+var octal = 071;
+
+// ES6
+var octal = 0o71;
+var bin = 0b1101;
+var octNum = Number("0o71");
+Number.parseInt("3") // 3
+Number.parseFloat("3.5") // 3.5
+```
+
+### Math
+New Math functions are introduced in ES6.
+
+### Array
+```
+var match = [1, 5, 10]
+match.find(5)
+match.find(item => item > 8);
+
+match.findIndex(item => item > 3);
+
+match.fill('a');
+match.fill('a', 3); // starting index
+match.fill('a', 2, 3); // starting, ending index
+
+match.copyWithin(2, 0) // [1,2,1,2]
+match.copyWithin(2, 0, 1) //[1,2,1,4]
+```
+
+#### Set
+New data structure added in ES6.
+
+```
+var set = new Set();
+
+set.size();
+set.add("some value");
+
+var key = {}
+set.add(key)
+set.has(key)
+
+var set = new Set([1, 2, 3, 4])
+set.clear() # size becomes zero
+set.delete(1)
+
+set.values() # is an iterator
+```
+
+#### Map
+```
+var map = new  Map();
+map.size
+
+map.set("name", "Foo")
+map.get("name") # Foo
+
+var map = new Map([['name', 'john'],['age', 15]])
+map.has('name')
+map.clear()
+
+for ([k, v] opf map) {}
+
+map.entries() # [k, v]
+
+map.values() # enumerates values
+```
+
+#### WeakMap and WeakSet
+No size, entries, values and forEach on WeakSet
+No size, entries, keys, values and forEach on WeakMap
+```
+var set = new WeakSet();
+set.has('')
+set.add(item)
+set.delete(item)
+set.clear()
+```
+
+```
+var map = new WeakMap()
+```
+
+
+### 5. Asynchronous Develiopment in ES6
+
+#### Promise Primer
+Callbacks
+
+```
+function getCompanyFromOrderId(orderId) {
+  try {
+    getOrder(orderId, function(order) {
+      getUser(order.userId, function(user) {
+        getCompany(user.companyId, function(company) {
+          //
+        });
+      });
+    });
+    }
+    catch(ex) {}
+}
+```
+
+Each callback has not only process the data by calling the appropriate
+next function, but it also has to pass in an appropriate callback into
+the next function, so each callback is not only handling processing, but
+also flow control, and when we add exception handling it gets even
+worse. When we add Exception Handling this may go even worse.
+
+Each callback goes onto the call stack separately from the caller.
+Because of that, any exceptions they throw aren't caught by the original
+initiator of the async request.
+
+Promise
+
+Promises have long been recognized as a solution to what is often known
+as callback hell.
+
+A promise is an object which represents a handle to listen to the
+results to the async operation whether it succeeds or fails. In other
+words, the promise promises to alert when the async operation is done
+and give the results of theat operation.
+
+One of the main benefits of promises are that they are composable. Two
+promises can be chained together so that one happens after the other. Or
+we can wait for them both to run, and then run a new operation when both
+are complete.
+
+A promise is made up of two parts. The first part is the control of the
+promise. In many libraries this is called a Deferred, and it is a
+separate object. In other implementations, this is simply a callback
+itself. This gives the creator of the promise the ability to mark the
+promise as succeeded or failed.
+
+The second part is the promise itself. This object can be passed around
+and enables interested parties to register listeners who can take
+actions when the asynchronous operation completes. That way, flow
+control is no longer the responsibility of the same function which will
+handle the result of the operation, and it can focus solely on doing its
+job and others can worry about their own responsibilities.
+
+Promise will also notify if the async process has a failure, so error
+handling is no longer swallowed up into the great Asynchronous abyss
+(deep) of javascript call stacks.
+
+A promise exists in on of three states: Pending, Fulfilled and Rejected.
+
+```
+function getCompanyFromOrderId(orderId) {
+  getOrder(orderId).then(function(order) {
+    return getUser(order.userId);
+  }).then(function(user) {
+    return getCompany(user.companyId);
+  }).then(undefined, function(error) {})
+}
+```
+
+#### Promise Basics

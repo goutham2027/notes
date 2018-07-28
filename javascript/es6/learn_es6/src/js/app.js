@@ -1,5 +1,51 @@
 console.log('hello world');
 
+// static resolve, reject
+// var previousPromise = Promise.resolve(3);
+// var promise = Promise.resolve(previousPromise);
+// var promise = Promise.catch(previousPromise);
+
+// Nesting promises. Resolve one promise only if other is resolved.
+// let promise = new Promise(function(resolve, reject) {
+//     resolve(3);
+// });
+
+// let newPromise = new Promise(function(resolve, reject) {
+//     resolve(promise);
+// });
+
+// newPromise.then(function(data) {
+//     console.log(data);
+// });
+
+
+// let promise = new Promise(function(resolve, reject) {
+//     // resolve(1);
+//     reject(Error('oh no!'));
+// });
+
+// promise.then(function(data) {
+//     console.log(data);
+// }, function(error) {
+//     console.log(error);
+// });
+// just to use error mechanism of promise use catch
+// promise.catch(function(error) {
+//     console.log(error);
+// });
+// let octal = 0o71;
+// console.log(octal);
+// Comprehensions
+// var numbers = [for (n of [1, 2, 3, 4]) n * n];
+// console.log(numbers)
+
+// import {Person} from './person';
+
+// let p = new Person('Goutham');
+// console.log(p.getName());
+
+// export let say_hello = (name) => `Hello ${name}`
+
 // Using generators to build iterables
 // let numbers = function* () {
 //     yield 1;

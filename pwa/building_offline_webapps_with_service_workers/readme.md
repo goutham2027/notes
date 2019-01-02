@@ -1,6 +1,6 @@
 Pluralsight course
 Building offline webapps with service workers - https://app.pluralsight.com/library/courses/building-offline-web-apps-service-worker/table-of-contents
-nikcodes.com
+Nik Molnar - nikcodes.com
 
 ### Course Overview
 Topics
@@ -32,7 +32,7 @@ Downsides of AppCache
 - The AppCache is an additional cache, not a browser default
 - Never ever ever far-future cache the manifest.
 
-Jake Archibald one of the main editors of the spec of specific workers
+Jake Archibald one of the main editors of the spec of service workers
 
 Service Workers:
 Newest of the line of web workers that were introduced in the HTML5 timeframe.

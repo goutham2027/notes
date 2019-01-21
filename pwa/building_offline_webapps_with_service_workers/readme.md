@@ -325,3 +325,40 @@ fetchAPI Get - https://codepen.io/goutham2027-1478716461/pen/Jwewbx?editors=1011
 fetchAPIPost - https://codepen.io/goutham2027-1478716461/pen/VqVqPo?editors=1011
 
 ### Chapter 5: First Service Worker
+isserviceworkerready - https://jakearchibald.github.io/isserviceworkerready/
+
+Path to service workers
+Registration of the service worker - Let the browser know that the website has a service worker
+and that is should go and download.
+
+Installation - Get the service worker up and running
+
+Usage - Make the service worker do useful stuff
+
+#### Registration
+To register a service worker with the browser
+
+```javascript
+if('serviceWorker' in navigator) {
+    navigator.serviceWorker
+    .register('/scripts/sw.js')
+    .catch(err => console.error('There is a problem', err));
+}
+```
+
+#### Installation
+states of the installation of brand new service worker
+state: no service worker
+action: install -> installing state
+event.waitUntil() -> Error state
+action: activate -> activated state
+event.waitUntil() -> Error state
+
+update existing/active service worker
+active service worker
+install -> installing -> waiting
+                      -> error
+activate -> activated state
+
+#### Using a service worker
+From activated state service worker can sit in idle. If it is idle for too long, browser will terminate to save resoruces.

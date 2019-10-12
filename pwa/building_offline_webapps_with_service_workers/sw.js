@@ -23,22 +23,9 @@ self.addEventListener('install', function(event) {
     event.waitUntil(
         caches.open(version)
         .then(function(cache) {
-            return cache.addAll(['dog.jpg'])
+            return cache.addAll(['/scripts/sw.js'])
         })
     )
-});
-
-// deleting a cache happens in activate
-self.addEventListener('activate', function(event) {
-    event.waitUntil(
-        caches.keys()
-        .then(function(keys) {
-            return Promise.all(keys.filter(function(key) {
-                return key != version;
-            })).map(function(key) {
-                return caches.delete(key);
-            });
-        }));
 });
 
 self.addEventListener('fetch', function(event) {
@@ -49,7 +36,7 @@ self.addEventListener('fetch', function(event) {
                 return res;
 
             if(!navigator.onLine)
-                return caches.match(new Request('/dog.jpg'))
+                return caches.match(new Request('/scripts/sw.js'))
 
             return fetch(event.request);
         })

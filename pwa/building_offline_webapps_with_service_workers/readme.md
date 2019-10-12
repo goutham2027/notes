@@ -362,3 +362,43 @@ activate -> activated state
 
 #### Using a service worker
 From activated state service worker can sit in idle. If it is idle for too long, browser will terminate to save resoruces.
+
+Understand the scope during the service worker registration.
+Service worker doesn't have DOM Access. Service worker run off separately from the browser on their own thread, they have no access to the DOM. We can not change UI from service worker.
+
+No Global state. We can't use some local variable to store information in because when the Service Worker goes from idle to terminated all of what we'll be wiped away. Use indexDB or localstorage to store such information.
+
+### Chapter 6: Leveraging the Cache API
+Cache API is defined in Service Worker specification.
+
+Cache API is not specific to Service workers
+
+Available on window and worker.
+
+A living standard.
+
+#### Cache API concepts
+2 concepts
+
+CacheStorage object - A collection of named caches
+Cache object - Storage for request/response pairs.
+
+
+CacheStorage
+
+open() - open individual cache
+has() -
+delete() -
+keys() -
+match() - takes request (key) and finds the first match and gives back the response.
+
+
+Cache
+
+match() - to search in only one indiviudal cache.
+matchAll() - to get all responses
+keys()
+add()
+addAll()
+put()
+delete()

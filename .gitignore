@@ -4,4 +4,5 @@ node_modules
 code-samples-linux-academy
 .cache
 .ipynb_checkpoints
+.vscode
 

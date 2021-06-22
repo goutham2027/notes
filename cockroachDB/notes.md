@@ -40,3 +40,39 @@ alter table courses add column schedule string;
 
 create table products(id uuid default gen_random_uuid(), name string, quantity integer, price decimal);
 ```
+
+
+
+concepts to understand
+
+1. Two phase commit
+4. Truetime
+2. Importance of Clock Synchronization in distributed systems.
+3. External consistency
+5. MVCC
+6. CAP theorem - understand what C - consistency, A - availability and P -
+Partion mean
+
+### Cluster Fundamentals
+The Keyspace, Ranges and Replicas
+
+Keyspace - Basic model of cluster data
+
+Ranges  - Keyspaces divided into ranges
+Replicas - copies of ranges
+Replicas distributed among nodes of cluster
+Replication factor is 3 by default but it can be increased to any odd
+number. eg: 5 or 7 etc
+
+The Keyspace is divided into Ranges of 64MB each (by default). The
+cluster creates multiple copies of each, call Replicas, which it
+distributes among the nodes of a cluster.
+
+### The raft protocol
+- Cockroach DB uses Raft protocol to perform writes in a distributed and
+durable manner.
+
+- Raft is an alogrithm that allows a distributed set of servers to agree
+  on any values without losing the record of that value, even in the
+face of node failure.
+

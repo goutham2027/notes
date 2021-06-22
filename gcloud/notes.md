@@ -52,7 +52,7 @@ another can have a range of 192.168.0.0/16.
 
 * A custom mode network has no subnets at creation. In order to create
   an instancein a custom mode network, we must first create a subnetwork
-  in that region and specify its IP range. A custom mode 
+  in that region and specify its IP range.
 
 * Traffic from the internet passes through a global switching function
   in the network, then down to individual instances.

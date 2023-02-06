@@ -134,3 +134,169 @@ db.Model(&User{}).RemoveIndex("idx_first_name")
 ```
 
 ![gorm tag summary]("https://github.com/goutham2027/notes/blob/master/golang/learn_gorm/gorm-tag-summary.png")
+
+### Relationships/Associations
+
+- one-to-one
+- foreign keys
+- one-to-many
+- many-to-many
+- polymorphism
+
+```golang
+db.Debug().Model(&Calendar{}).AddForeignKey(
+  "user_id", "users(id)", "CASCADE", "CASCADE"
+)
+// user has-one calendar
+type User struct {
+  gorm.Model
+  Username string
+  FirstName string
+  LastName string
+  Calendar Calendar
+}
+
+type Calendar struct {
+  gorm.Model
+  UserID uint
+}
+
+db.Debug().Save(
+  &User{
+    Username: "adent",
+    Calendar: Calendar{
+      Name: "Improbable events",
+    },
+  }
+)
+
+u := User{}
+c := Calendar{}
+db.First(&u).Related(&c, "calendar")
+
+
+// user belongs to calendar
+// doesn't make sense
+type User struct {
+  gorm.Model
+  Username string
+  FirstName string
+  LastName string
+  Calendar Calendar
+  CalendarId uint
+}
+
+type Calendar struct {
+  gorm.Model
+}
+```
+
+#### One-to-Many
+
+```golang
+# calendar has many appointments
+type Calendar struct {
+  gorm.Model
+  Name string
+  Appointments []Appointment
+}
+
+type Appointment struct {
+  gorm.Model
+  CalendarID uint
+}
+
+db.Debug().Save(&User{
+  Username: "adent",
+  Calendar: Calendar {
+    Name: "Improbable Events",
+    Appointments: []Appointment {
+      {Subject: "Spontaneous Whale Generation"},
+      {Subject: "Saved from Vaccuum of Space"},
+    }
+  }
+})
+```
+
+#### Many to Many relationship
+
+```golang
+type User struct {
+  gorm.Model
+  Username string
+}
+
+type Calendar struct {
+  gorm.Model
+  Name string
+  UserID uint
+  Appointments []Appointment
+}
+
+type Appointment struct {
+  gorm.Model
+  Subject string
+  Description string
+  CalendarID uint
+  Attendees []User `gorm:"many2many:appointment_user"`
+}
+
+users := []User {
+  {Username: "fprefect"},
+  {Username: "tmacmillan"},
+  {Username: "mrobot"},
+}
+
+for i := range users {
+  db.Save(&users[i])
+}
+
+
+db.Debug().Save(&User{
+  Username: "adent",
+  Calendar: Calendar{
+    Name: "Improbable events",
+    Appointments: []Appointment{
+      {Subject: "Spontaneous Whale Generation", Attendees: users},
+      {Subject: "Saved from Vaccuum of space", Attendees: users},
+    }
+  }
+})
+```
+
+#### Polymorphism
+
+```golang
+type Cat struct {
+  gorm.Model
+  Toy Toy `gorm:"polymorphic:owner"`
+}
+
+
+type Dog struct {
+  form.Model
+  Toy Toy `gorm:"polymorphic:owner"`
+}
+
+type Toy struct {
+  gorm.Model
+  Type string
+  OwnerID uint
+  OwnerType string
+}
+```
+
+#### Methods from db object
+
+```golang
+db.Model(&Calendar{}).Association("Appointments")
+
+.Find(&appointments)
+.Append(&appointemntsToAdd)
+.Delete(&appointemntsToDelete)
+.Replace(&appointemntsToSubstitute)
+.Count()
+.Clear()
+```
+
+### Creating, Updating and Deleting records

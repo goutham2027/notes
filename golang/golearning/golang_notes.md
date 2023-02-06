@@ -864,6 +864,7 @@ func main() {
 
 - Functions as types
   we can pass functions like any other type
+
   ```golang
   var divide func(float64, float64) (float64, error)
   divide = func(a, b float64) (float64, error) {
@@ -878,7 +879,9 @@ func main() {
     fmt.Println(d)
   }
   ```
+
 - Methods
+  - methods can be attached to any custom type
 
 ```
 func main() {
@@ -906,3 +909,262 @@ func (g *greeting) greet() {
 ```
 
 ### Interfaces
+
+- Basics
+  - Interfaces do not describe data they describe behaviors
+  - Implicit implementation of interfaces
+    - It's done by creating a method on ConsoleWriter that has
+      the signature of writer interface
+  - Naming convention: if you have only one method in the interface then
+    interface name should end with `er`
+  - Polymorphic behavior
+
+```golang
+func main() {
+  var w Writer = ConsoleWriter{}
+  w.Write([]byte("hello Go!"))
+}
+
+type Writer interface {
+  Write([]byte) (int, error)
+}
+
+type ConsoleWriter struct {}
+
+func (cw ConsoleWriter) Write(data []byte) (int, error) {
+  n, err := fmt.Println(string(data))
+  return n, err
+}
+```
+
+```golang
+// we don't need structs to implement interfaces
+
+func main() {
+  myInt := IntCounter(0)
+  var inc Incrementer = &myInt
+  for i :=  0; i < 10; i++ {
+    fmt.Println(inc.Increment())
+  }
+}
+
+type Incrementer interface {
+  Increment() int
+}
+
+type IntCounter int
+
+func (ic *IntCounter) Increment() int {
+  *ic++
+  return int(*ic)
+}
+```
+
+- Composing interfaces
+
+```golang
+
+func main() {
+  var wc WriterCloser = NewBufferedWriterCloser()
+  wc.Write([]("Hello Youtube listeners, this is a test"))
+  wc.Close()
+}
+
+type Writer interface {
+  Write([]byte) (int, error)
+}
+
+type Closer interface {
+  Close() error
+}
+
+type WriterCloser interface {
+  Writer
+  Closer
+}
+
+type BufferedWriterCloser struct {
+  buffer *bytes.Buffer
+}
+
+func (bwc *BufferedWriterCloser) Write(data []byte) (int, error) {
+  n, err := bwc.buffer.Write(data)
+  if err != nil {
+    return 0, err
+  }
+
+  v := make([]byte, 8)
+  for bwc.buffer.Len() > 8 {
+    _, err := bwc.buffer.Read(v)
+    if err != nil {
+      return 0, err
+    }
+  }
+  return n, nil
+}
+
+func (bwc *BufferedWriterCloser) Close() error {
+  for bwc.buffer.Len() > 0 {
+    data := bwc.buffer.Next(8)
+    _, err := fmt.Println(string(data))
+    if err != nil {
+      return err
+    }
+  }
+  return nil
+}
+
+
+func NewBufferedWriterCloser() *BufferedWriterCloser {
+  return &BufferedWriterCloser{
+    buffer: bytes.NewBuffer([]byte{}),
+  }
+}
+```
+
+- Type conversion
+  - The empty interface
+  - Type switches
+- Implementing interfaces with values vs pointers
+- Best practices
+  - Use many, small interfaces
+  - Single method interfaces are some of the most powerful and flexible
+    - io.Writer
+    - io.Reader
+    - interface()
+  - Don't export interfaces for types that will be consumed
+  - Do export interfaces for types that will be used by package
+  - Design functions and methods to receive interfaces whenever possible
+
+### Goroutines
+
+- Creating goroutines
+  - Most programming langs use OS threads. Means, they've got an individual function call stack dedicated to the execution of whatever code is handed to that thread. Traditionally they are expensive.
+  - Go uses green threads (like in erlang), abstraction of a thread called goroutine. Inside of the go runtime, there is a scheduler that's going to map these gorotuines onto these OS threads for period of time. They are very cheap to destroy.
+-
+
+```golang
+func main() {
+  go sayHello()
+}
+
+func sayHello() {
+  fmt.Println("hello")
+}
+```
+
+```golang
+var wg = sync.WaitGroup()
+
+func main() {
+  wg.Add(1)
+  go sayHello()
+  wg.Wait()
+}
+
+func sayHello() {
+  fmt.Println("Hello")
+  wg.Done()
+}
+```
+
+- Synchronization
+
+  - WaitGroups
+  - Mutexes
+
+  ```golang
+  // this example will not print the expected output
+  // move the locks to main function
+  var wg = sync.WaitGroup{}
+  var counter = 0
+  var m = sync.RWMutex{}
+
+  func main() {
+    runtime.GOMAXPROCS(100)
+  	for i := 0; i < 10; i++ {
+  		wg.Add(2)
+  		go sayHello()
+  		go increment()
+  	}
+  	wg.Wait()
+  }
+
+  func sayHello() {
+  	m.RLock()
+  	fmt.Printf("Hello #%v\n", counter)
+  	m.RUnlock()
+  	wg.Done()
+  }
+  ```
+
+  ```golang
+  var wg = sync.WaitGroup{}
+  var counter = 0
+  var m = sync.RWMutex{}
+
+  func main() {
+    runtime.GOMAXPROCS(100)
+  	for i := 0; i < 10; i++ {
+  		wg.Add(2)
+      m.RLock()
+  		go sayHello()
+      m.Lock()
+  		go increment()
+  	}
+  	wg.Wait()
+  }
+
+  func sayHello() {
+  	fmt.Printf("Hello #%v\n", counter)
+  	m.RUnlock()
+  	wg.Done()
+  }
+
+  func increment() {
+    counter++
+    m.Unlock()
+    wg.Done()
+  }
+  ```
+
+- Parallelism
+
+- Best Practices
+  - Don't create goroutines in libraries
+    - Let consumer control concurrency
+  - When creating a goroutine, know how it will end
+    - Avoids subtle memory leaks
+  - Check for race conditions at compile time
+    `go run -race <main.go>`
+
+### Channels
+
+- Channel basics
+  - channels to sync data transmission b/w multiple go-routines
+
+```golang
+
+```
+
+- Restricting data flow
+
+  - Receive only channels
+
+  ```golang
+  go func(ch <- chan int) {
+
+  }(ch)
+  ```
+
+  - Send only channels
+
+  ```golang
+  go func(ch chan <- int) {}(ch)
+  ```
+
+- Buffered channels
+- Closing channels
+- for range loops with channels
+- select statements
+  - switch for channels

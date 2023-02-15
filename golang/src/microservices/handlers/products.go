@@ -32,6 +32,7 @@ func (p *Products) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 		re := regexp.MustCompile(`/([0-9]+)`)
 		g := re.FindAllStringSubmatch(r.URL.Path, -1)
 		if len(g) != 1 {
+			p.l.Println("error here")
 			http.Error(rw, "Invalid URI", http.StatusBadRequest)
 			return
 		}
@@ -43,7 +44,8 @@ func (p *Products) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 			return
 		}
 		p.l.Println(id)
-
+		p.updateProduct(id, rw, r)
+		return
 	}
 
 	// handle update
@@ -71,6 +73,23 @@ func (p *Products) addProduct(rw http.ResponseWriter, r *http.Request) {
 	data.AddProduct(prod)
 }
 
-func (p *Products) updateProduct(rw http.ResponseWriter, r *http.Request) {
+func (p *Products) updateProduct(id int, rw http.ResponseWriter, r *http.Request) {
+	prod := &data.Product{}
+	err := prod.FromJSON(r.Body)
 
+	if err != nil {
+		http.Error(rw, "Unable to decode json", http.StatusBadRequest)
+	}
+	p.l.Printf("Prod: %#v", prod)
+
+	err = data.UpdateProduct(id, prod)
+	if err == data.ErrProductNotFound {
+		http.Error(rw, "Product not found", http.StatusNotFound)
+		return
+	}
+
+	if err != nil {
+		http.Error(rw, "Product not found", http.StatusNotFound)
+		return
+	}
 }

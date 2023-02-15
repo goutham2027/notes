@@ -12,3 +12,6 @@ encode - directly writes to IO
 marshal - writes to memory first
 
 curl localhost:9090 -X DELETE -v | jq
+
+Gorila framework - https://www.gorillatoolkit.org/
+Testify - testing framework - https://github.com/stretchr/testify

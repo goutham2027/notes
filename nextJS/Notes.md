@@ -101,4 +101,38 @@ reviews folder in [productID]
 
 ![folder structure](nested_dynamic_routes.png)
 
-- continue from here - https://www.youtube.com/watch?v=Ssw6-69KLRo&list=PLC3y8-rFHvwjOKd6gdf4QtV1uYNiQnruI&index=9
+**Catch-all Segments**
+
+- captures all url segments and maps them to single file `page.tsx`
+
+**Custom 404 page**
+
+- create `not-found.tsx` in `app` directory
+- `notFound()` function
+- `import {notFound} from "next/navigation";`
+- we can create `not-found.tsx` at route specific folders
+
+### File Colocation
+
+- until we have a `page.tsx` file in the folder, it is not publicly accessible
+- only the content in `page.tsx` is sent to the client
+
+**Private folders**
+
+- A private folder indicates that it is a private implementation detail and should not be considered by the routing system
+- The folders and all its subfolders are excluded from routing
+- Prefix the folder name with an underscore
+- Useful
+  - For separating UI logic from routing logic
+  - For consistently organizing internal files across a project
+- If you want to include an underscore in URL segments, you can prefix the folder name with `%5F` which is the URL encoded form of an underscore.
+
+### Route Groups
+
+- Allows us to logically group our routes and project files without affecting the URL path structure
+- Authentication routes
+  - Register
+  - Login
+  - Forgot Password
+- All routes are put in `auth` folder in `app` folder.
+- Wrap `auth` in paranthesis `()`. It looks like `(auth)`. NextJS will omit `auth` from the URL.

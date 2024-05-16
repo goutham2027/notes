@@ -4,14 +4,15 @@ import "testing"
 
 func TestGreet(t *testing.T) {
 	got := Greet("Gopher")
-	expect := "Hello, Gopher!\n"
+	expect := "Hello, Gophr!\n"
 
 	if got != expect {
+		// t.FailNow()
 		t.Errorf("Did not get expected result. Wanted %q, got: %q\n", expect, got)
 	}
 }
 
-func TestGreetTableDriver(t *testing.T) {
+func TestGreetTableDriven(t *testing.T) {
 	scenarios := []struct {
 		input  string
 		expect string

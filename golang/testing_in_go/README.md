@@ -28,8 +28,11 @@ standard library packages
 - testing/quick
   - to simplify blackbox testing
 - testing/iotest
-  - reader and writer
+
+  - contains several readers and writers
+
 - net/http/httptest
+  - simulate requests and responses and write assertions
 
 3rd party packages
 
@@ -66,6 +69,8 @@ standard library packages
 
 immediate failure
 
+- exit the tests as soon as a test is exited with a failure
+
 ```golang
 t.FailNow()
 t.Fatal(args ...interface{})
@@ -73,6 +78,8 @@ t.Fatalf(format string, args ...interface{})
 ```
 
 Non-immediate failure
+
+- do not exit tests when a test is failed
 
 ```golang
 t.Fail()

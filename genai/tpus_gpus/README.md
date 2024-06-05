@@ -3,6 +3,11 @@
 [TPUs: History and Hardware](https://www.youtube.com/watch?v=MXxN4fv01c8)
 
 [In-Datacenter Performance Analysis of a Tensor Processing Unit](https://arxiv.org/abs/1704.04760)
+Inference - running a machine learning model that has already been trained
+[Google TPU & other in-house AI chips](https://www.youtube.com/watch?v=YZzROmj5Ols)
+https://cloud.google.com/blog/products/ai-machine-learning/what-makes-tpus-fine-tuned-for-deep-learning
+
+TPU is an application-specific integrated circuit (ASIC) designed by Google for neural networks.
 
 **TPU v1**
 
@@ -42,7 +47,7 @@
 - 4 chips instead of 1
 - head sinks
 - 180 tflops (terraflops) - 180 trillion floating pointing ops per second
-- can do both training and prediction
+- can do both training and prediction/inference
 - Each board has 4 chips, but each chip has 2 cores
 - Each core then contains a matrix unit, a vector unit and a scalar unit all
   connected to 8 gb of highbandwidth memory
@@ -51,6 +56,8 @@
 - New datatype bfloat16: combines the range of a 32 bit fp with just storage space of a 16-bit fp number
 - b means brain, it comes from google brain team
 - precision is lost
+- tpuV2 also included networks links, allowing Google to combine up to 256 chips into a single AI
+  supercluster, called TPU pods
 
 - TPU v2 are arranged as pods
 - One TPU v2 pod is 64 TPUs
@@ -65,6 +72,11 @@
 - over 100 petaflops
 
 LPU - Large scale processing unit
+
+### TPU v4 & TPU4i
+
+- v4 is for both training and inference
+- 4i is only for inference
 
 ### cpu gpu tpu
 
@@ -107,3 +119,74 @@ LPU - Large scale processing unit
 - Gogole designed the tpu to build a Domain specific architecture
 - Matrix processor specialized for neural network workloads
 - Fast matrix calculations with comparitively less power consumption
+
+### What is a Tensor?
+
+https://www.youtube.com/watch?v=L35fFDpwIM4
+
+- Within ml community, Tensors are used in conjunction with Neural Networks.
+
+### Custom AI chips in AWS
+
+- Acquired Israel based startup Annapurna labs
+- For inference called Inferential
+- For training Trainium
+
+### Microsoft
+
+- Project Athena
+
+### Tesla
+
+- Dojo D1
+
+### Nvidia
+
+**Black Wheel B200 GPU**
+
+**H100**
+
+**A100**
+
+- Architecture: Ampere
+- Optimized for both training and inference
+- Tensor cores
+- Suitable for large scale deep learning training and inference
+- High performance computing (HPC)
+
+**V100**
+
+- Architecture: Volta
+- Tensor cores for deep learning, high memory bandwidth
+- NVLink for high speed connect
+- AI training and inference, HPC
+
+**T4**
+
+- Architecture: Turing
+- Tensor cores, energy efficient
+- for both inference and lightweight training
+- video transcoding
+
+**Titan Rtx**
+
+- Architecture: Turing
+- Tensor cores
+- AI r&d
+
+### Misc
+
+- Coral AI Edge TPU
+
+### Training and Inference
+
+**Training**
+
+- Training involves updating the model parameters based on the input data
+- Computationally intensive and requires a lof of parallel processing power
+  to handle large datasets and complex models efficiently
+
+**Inference**
+
+- Inference is the process of using a trained model to make predictions.
+- Less computationally demanding

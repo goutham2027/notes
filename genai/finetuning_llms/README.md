@@ -82,3 +82,113 @@ I/P: What is the capital of Mexico? -> LLM -> O/P: What is the capital of Hungar
   - correcting old information
 
 **Tasks to finetune**
+
+- Text in text out
+  - Extraction: text in, less text out
+    - Reading
+    - keywords, topics, routing, agents (planning, reasoning, self-critic)
+  - Expansion: text in, more text out
+    - Writing
+    - Chat, write emails, write code
+
+**First time finetuning**
+
+1. Identify task(s) by prompt-engineering a large LLM
+2. Find tasks that you see an LLM doing Ok at
+3. Pick one task
+4. Get ~1000 inputs and outputs for the task
+5. Finetune a small LLM on this data
+
+### Instruction finetuning
+
+- A variant of finetuning that enabled GPT-3 to turn into Chat GPT
+- other names: instruction tune or instruction following LLMs
+- Teaches model to behave more like a chatbot
+- Better user interface for model interaction
+
+**Datasets**
+
+- FAQs
+- Customer support conversations
+- Dialog datasets/instruction response datasets
+- Convert existing data into Question and Answer dataset
+
+- Alpaca from Stanford will use ChatGpt to prepare data
+
+**Instruction Finetuning Generalization**
+
+- Teaches new behavior to the model
+- Generalize following instructions to other data, not in finetuning dataset
+
+Iterative Steps
+
+1. Data preparation
+2. Training
+3. Evaluation
+
+### Data Preparation
+
+- Higher quality data
+- Diversity
+- Real data but not generated
+- More data is better
+
+**steps to prepare data**
+
+1. collect instruction-response pairs
+2. concatenate pairs
+3. tokenize: pad, truncate
+4. split into train/test
+
+**tokenizing**
+
+- text data -> numbers that represent each of the pieces of the text
+- Use the tokenizer associated with your model
+
+```python
+from transformers import AutoTokenizer
+
+tokenizer = AutoTokenizer.from_pretrained("EleutherAI/pythia-70m")
+text = "Hi, how are you?"
+encoded_text = tokenizer(text)["input_ids"]
+print(encoded_text)
+
+decoded_text = tokenizer.decode(encoded_text)
+
+```
+
+**padding**
+
+- the tokens can be in varying in lengths. everything in a batch is same length.
+- padding helps to maintain same lengths in a batch
+
+```python
+tokenizer.pad_token = tokenizer.eos_token
+encoded_texts_longest = tokenizer(list_texts, padding=True)
+print(encoded_texts_longest["input_ids"])
+```
+
+**truncate**
+
+- models will also have max length it can handle and take in. similar to prompt length
+- truncation is a strategy to make the encoded text much shorter and fit into the model
+
+```python
+encoded_texts_truncation = tokenizer(list_texts, max_length=3, truncation=True)
+print(encoded_texts_truncation["input_ids"])
+```
+
+### Training Process
+
+Hyperparameters
+
+- Learning rate
+- Learning rate scheduler
+- Optimizer hyperparameters
+
+epoch
+
+https://www.youtube.com/watch?v=ml2xMeftEG4
+https://learn.microsoft.com/en-us/ai/playbook/technology-guidance/generative-ai/working-with-llms/fine-tuning
+https://wow.groq.com/lpu-inference-engine/
+Prompt hydrating

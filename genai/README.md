@@ -6,6 +6,8 @@ pip install openai
 
 nano llm - https://github.com/harishhirthi/Nano-LLM
 
+fast ai
+
 ### Questions
 
 **On what basis we select a GPU accelerator when we want to deploy an LLM model?**

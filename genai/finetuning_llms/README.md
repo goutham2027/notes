@@ -180,15 +180,107 @@ print(encoded_texts_truncation["input_ids"])
 
 ### Training Process
 
+- Add training data
+- calculate loss
+- update weights
+
 Hyperparameters
 
 - Learning rate
 - Learning rate scheduler
 - Optimizer hyperparameters
 
-epoch
+epoch is a pass over your entire dataset and then load the data in batches
 
-https://www.youtube.com/watch?v=ml2xMeftEG4
-https://learn.microsoft.com/en-us/ai/playbook/technology-guidance/generative-ai/working-with-llms/fine-tuning
-https://wow.groq.com/lpu-inference-engine/
-Prompt hydrating
+```python
+# training using pytorch
+for epoch in range(num_epochs):
+  for batch in train_dataloader:
+    outputs = model(**batch)
+    loss = outputs.loss
+    loss.backward()
+    optimizer.step()
+```
+
+The code above is a low level training using pytorch. There are highlevel interfaces to train
+example lamini llama interface
+
+```python
+from llama import BasicModelRunner
+
+model = BasicModelRunner("EleutherAI/pythia-410m")
+model.load_data_from_jsonlines("lamini_docs.jsonl")
+model.train()
+```
+
+### Evaluation
+
+- human evaluation
+- test suites: good test data is cruicial
+  - high-quality
+  - accurate
+  - genealized
+  - not seen in training data
+- elo rankings
+  - like A-B test b/w multiple models
+
+**Common LLM benchmarks**
+
+- ARC is a set of grade-school questions
+- HellaSwag is test of commonsense
+- MMLU is a multitask metric covering elementary math, US History, computer science, law and more
+- TruthfulQA measures a model's propensity to reproduce falsehoods commonly found online
+
+**Error Analysis**
+
+- Understand base model behavior before finetuning
+- Categorize errors: iterate on data to fix these problems in data space
+
+### Practical approach to finetuning
+
+1. Figure out your task
+2. Collect data related to the task's inputs/outputs
+3. Generate data if you don't have enough data (use prompt template)
+4. Finetune a small model (eg: 400M - 1B)
+5. Vary the amount of data you give the model
+6. Evaluate your LLM to know what's going well vs not
+7. Colect more data to improve
+8. Increase task complexity
+9. Increase model size for performance
+
+**Complexity**
+
+- More tokens out is harder
+- Reading is easier
+  - Keywords, topics, routing, agents
+- Writing tasks are harder
+  - Chat, write emails, write code
+
+![model sizes x compute](./model_sizeXCompute.png)
+
+**PEFT - Parameter Efficient finetuning**
+![PEFT](./PEFT.png)
+
+- LoRA: Low-Rank Adaptation of LLMs
+
+  - reduces the number of parameters, weights we have to train
+  - eg: for gpt3, 10000x less
+  - slightly below accuracy to finetuning
+  - same inference latency
+  - Train new weights (LoRA weights) in some layers, freeze main weights
+
+    - new weights: rank decomposition matrices of original weights' change
+    - At inference, merge with main weights
+
+  - Use LoRA for adapting to new, different tasks
+
+    - eg: train a model with LoRA on one customer's data and then train
+      another one on another customer's data and then be able to merge them
+      each in at inference time when we need them.
+
+    https://www.youtube.com/watch?v=ml2xMeftEG4
+    https://learn.microsoft.com/en-us/ai/playbook/technology-guidance/generative-ai/working-with-llms/fine-tuning
+    https://wow.groq.com/lpu-inference-engine/
+    Prompt hydrating
+    agent.ai
+    Elethuer AI

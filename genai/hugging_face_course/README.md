@@ -84,3 +84,27 @@ from transformers import pipeline
 
 generator = pipeline("text-generation", model="distilgpt2")
 ```
+
+### How do Transformers work?
+
+- The Transformer architecture was introduced in June 2017
+- [Paper: Attention is all you need](https://arxiv.org/pdf/1706.03762)
+- Evolution and links to papers can be found from here - https://huggingface.co/learn/nlp-course/en/chapter1/4?fw=pt
+
+**Transformers are language models**
+
+- All the Transformer models (GPT, BERT, BART, T5) have been trained as language models
+- They have been trained on large amounts of raw text in a self-supervised fashion
+- Self supervised learning is a type of training in which the objective is automatically computed from the inputs of the model. Humans are not needed to label the data
+- Though the model develops a statistical understanding of the language, but not useful for specific tasks.
+- General pretrained model then goes through a process called Transfer Learning. The model is fine-tuned in a supervised way (human annotated labels)
+- Eg: predicting the next word in a sentence reading the `n` previous words. This is called _causal language modeling_ because the output depends on the past and present inputs, but not the future ones.
+- Masked models can predict the masked/missing word in the sentence.
+
+- Pretraining is computational heavy and everytime someone pretrains from scratch would add unnecessary global costs.
+- That's why sharing of language models is important. Sharing the trained weights and building on top of already trained weights reduces the overall compute cost and carbon footprint.
+
+- https://mlco2.github.io/impact/
+- https://codecarbon.io/
+
+**Transfer Learning**

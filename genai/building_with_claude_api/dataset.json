@@ -1,0 +1,50 @@
+[
+  {
+    "prompt_inputs": {
+      "height": "180 cm",
+      "weight": "70 kg",
+      "goal": "Marathon training - carbohydrate loading with adequate protein for recovery",
+      "restrictions": "None"
+    },
+    "solution_criteria": [
+      "Meal plan covers all meals for one day (breakfast, lunch, dinner, snacks)",
+      "Emphasizes carbohydrates (55-65% of calories) for endurance fuel with adequate protein (1.2-1.6g per kg body weight)",
+      "Total daily calories align with marathon training needs (~2,800-3,200 calories)",
+      "Plan is compact and concise (single day format, easy to read)"
+    ],
+    "task_description": "Write a compact, concise 1 day meal plan for a single athlete",
+    "scenario": "Testing with a high-endurance athlete (marathon runner) requiring specific caloric intake and carbohydrate loading while maintaining protein balance"
+  },
+  {
+    "prompt_inputs": {
+      "height": "180 cm",
+      "weight": "85 kg",
+      "goal": "Maximize strength and muscle gain through structured training nutrition with optimal protein timing",
+      "restrictions": "No shellfish or tree nuts"
+    },
+    "solution_criteria": [
+      "Meal plan spans exactly 1 day with 4-5 meals",
+      "Total daily protein meets or exceeds 1.6g per kg bodyweight (136g minimum)",
+      "Includes a substantial meal within 2 hours before or after training session",
+      "Respects dietary restrictions (no shellfish or tree nuts)"
+    ],
+    "task_description": "Write a compact, concise 1 day meal plan for a single athlete",
+    "scenario": "Testing with a strength/power athlete (weightlifter) needing elevated protein consumption and strategic meal timing around training sessions"
+  },
+  {
+    "prompt_inputs": {
+      "height": "178",
+      "weight": "72",
+      "goal": "Soccer match performance and recovery",
+      "restrictions": "Vegan (no animal products)"
+    },
+    "solution_criteria": [
+      "All meals are 100% plant-based with no animal products",
+      "Meal plan is compact and covers one full day",
+      "Includes adequate protein and carbohydrates for soccer athletic demands",
+      "Practical and realistic for a single athlete to prepare"
+    ],
+    "task_description": "Write a compact, concise 1 day meal plan for a single athlete",
+    "scenario": "Testing with a sport-specific dietary constraint (vegan soccer player) requiring complete plant-based nutrition meeting athletic performance demands"
+  }
+]

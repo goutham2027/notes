@@ -1,0 +1,253 @@
+
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Prompt Evaluation Report</title>
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+                line-height: 1.6;
+                margin: 0;
+                padding: 20px;
+                color: #333;
+            }
+            .header {
+                background-color: #f0f0f0;
+                padding: 20px;
+                border-radius: 5px;
+                margin-bottom: 20px;
+            }
+            .summary-stats {
+                display: flex;
+                justify-content: space-between;
+                flex-wrap: wrap;
+                gap: 10px;
+            }
+            .stat-box {
+                background-color: #fff;
+                border-radius: 5px;
+                padding: 15px;
+                box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+                flex-basis: 30%;
+                min-width: 200px;
+            }
+            .stat-value {
+                font-size: 24px;
+                font-weight: bold;
+                margin-top: 5px;
+            }
+            table {
+                width: 100%;
+                border-collapse: collapse;
+                margin-top: 20px;
+            }
+            th {
+                background-color: #4a4a4a;
+                color: white;
+                text-align: left;
+                padding: 12px;
+            }
+            td {
+                padding: 10px;
+                border-bottom: 1px solid #ddd;
+                vertical-align: top;
+            }
+            tr:nth-child(even) {
+                background-color: #f9f9f9;
+            }
+            .output-cell {
+                white-space: pre-wrap;
+            }
+            .score {
+                font-weight: bold;
+                padding: 5px 10px;
+                border-radius: 3px;
+                display: inline-block;
+            }
+            .score-high {
+                background-color: #c8e6c9;
+                color: #2e7d32;
+            }
+            .score-medium {
+                background-color: #fff9c4;
+                color: #f57f17;
+            }
+            .score-low {
+                background-color: #ffcdd2;
+                color: #c62828;
+            }
+            .output {
+                overflow: auto;
+                white-space: pre-wrap;
+            }
+
+            .output pre {
+                background-color: #f5f5f5;
+                border: 1px solid #ddd;
+                border-radius: 4px;
+                padding: 10px;
+                margin: 0;
+                font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+                font-size: 14px;
+                line-height: 1.4;
+                color: #333;
+                box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+                overflow-x: auto;
+                white-space: pre-wrap; 
+                word-wrap: break-word; 
+            }
+
+            td {
+                width: 20%;
+            }
+            .score-col {
+                width: 80px;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="header">
+            <h1>Prompt Evaluation Report</h1>
+            <div class="summary-stats">
+                <div class="stat-box">
+                    <div>Total Test Cases</div>
+                    <div class="stat-value">4</div>
+                </div>
+                <div class="stat-box">
+                    <div>Average Score</div>
+                    <div class="stat-value">8.0 / 10</div>
+                </div>
+                <div class="stat-box">
+                    <div>Pass Rate (≥7)</div>
+                    <div class="stat-value">100.0%</div>
+                </div>
+            </div>
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Scenario</th>
+                    <th>Prompt Inputs</th>
+                    <th>Solution Criteria</th>
+                    <th>Output</th>
+                    <th>Score</th>
+                    <th>Reasoning</th>
+                </tr>
+            </thead>
+            <tbody>
+    
+            <tr>
+                <td>Testing with interdisciplinary passage containing mixed topics across psychology, neuroscience, and sociology to verify the prompt can identify and separate distinct domain-specific subjects</td>
+                <td class="prompt-inputs"><strong>content:</strong> Recent neuroscientific investigations have illuminated the neural mechanisms underlying social cognition, particularly how the prefrontal cortex and amygdala interact during emotional regulation in interpersonal contexts. Simultaneously, sociological research demonstrates that cultural variations in attachment patterns significantly influence these neural pathways, suggesting a bidirectional relationship between brain structure and social norms. Furthermore, psychological studies on mirror neurons reveal how observational learning facilitates the internalization of group behaviors, while neuroimaging data indicates that individuals with higher social anxiety exhibit reduced activation in the ventromedial prefrontal cortex during peer interaction tasks. These findings collectively suggest that understanding human behavior requires integrating neuroscientific mechanisms, cultural sociological frameworks, and psychological principles of learning and emotion.</td>
+                <td class="criteria">• Extracts distinct topics from psychology, neuroscience, and sociology domains<br>• Returns output as a JSON array of strings<br>• Captures domain-specific subjects without redundancy or over-fragmentation</td>
+                <td class="output"><pre>```json
+[
+  "neural mechanisms underlying social cognition",
+  "prefrontal cortex and amygdala interaction during emotional regulation",
+  "emotional regulation in interpersonal contexts",
+  "cultural variations in attachment patterns",
+  "bidirectional relationship between brain structure and social norms",
+  "mirror neurons and observational learning",
+  "internalization of group behaviors",
+  "neuroimaging data on social anxiety",
+  "ventromedial prefrontal cortex activation during peer interaction",
+  "integration of neuroscientific mechanisms and cultural sociological frameworks",
+  "psychological principles of learning and emotion"
+]
+```</pre></td>
+                <td class="score-col"><span class="score score-medium">7</span></td>
+                <td class="reasoning">The solution meets all mandatory requirements: it returns a valid JSON array of strings containing topics from the passage with no extra commentary. The secondary criteria are largely satisfied—topics span the required domains and avoid significant redundancy. However, there are minor issues with topic granularity and some conceptual overlap that could be refined. The extraction is solid but not optimal in terms of clean separation and balance of specificity.</td>
+            </tr>
+        
+            <tr>
+                <td>Testing with a passage containing implicit and explicit topics, where some subjects are directly stated while others must be inferred from context and examples</td>
+                <td class="prompt-inputs"><strong>content:</strong> The study of epigenetic mechanisms has revealed how environmental stressors such as malnutrition and chronic stress can alter DNA methylation patterns without changing the underlying genetic sequence. These modifications, observed in both animal models and human populations exposed to famine conditions, demonstrate reversible changes in gene expression that persist across generations. Furthermore, histone acetylation levels serve as biomarkers for cognitive decline in neurodegenerative diseases, suggesting that chromatin remodeling plays a crucial role in neuroplasticity. The implications extend to therapeutic interventions targeting these molecular mechanisms, with emerging evidence that certain dietary compounds can modulate epigenetic states and potentially reverse age-related phenotypes.</td>
+                <td class="criteria">• Captures both explicitly stated topics (DNA methylation, histone acetylation, epigenetic mechanisms) and implicitly referenced topics inferred from context and examples (environmental stress effects, gene expression, neuroplasticity, therapeutic interventions, aging)<br>• Returned as a valid JSON array of strings<br>• Topics are distinct and avoid redundant or overly granular entries</td>
+                <td class="output"><pre>```json
+[
+  "epigenetic mechanisms",
+  "environmental stressors and DNA methylation",
+  "malnutrition and chronic stress",
+  "gene expression modifications",
+  "transgenerational epigenetic inheritance",
+  "histone acetylation and cognitive decline",
+  "neurodegenerative diseases",
+  "chromatin remodeling and neuroplasticity",
+  "epigenetic therapeutic interventions",
+  "dietary compounds and epigenetic modulation",
+  "age-related phenotypes"
+]
+```</pre></td>
+                <td class="score-col"><span class="score score-medium">7</span></td>
+                <td class="reasoning">The solution meets all mandatory requirements: it is a valid JSON array of strings containing topics from the article with no extra commentary. It successfully captures major explicit topics (epigenetic mechanisms, DNA methylation, histone acetylation, neurodegenerative diseases) and inferred implicit topics (neuroplasticity, therapeutic interventions, aging). However, it omits a few explicitly mentioned elements like 'famine conditions' and the research populations/models referenced. The secondary criteria are mostly met—topics are distinct and avoid excessive granularity—though some compound topic phrases could be more atomic. These are minor gaps that don't violate mandatory requirements but represent incomplete coverage of stated content.</td>
+            </tr>
+        
+            <tr>
+                <td>Testing with a passage containing overlapping or hierarchical topics where broader categories and their specific subtopics appear together to verify the prompt handles relationships between concepts appropriately</td>
+                <td class="prompt-inputs"><strong>content:</strong> Recent advances in machine learning have revolutionized natural language processing, a subfield that encompasses multiple interconnected domains. Deep learning architectures, particularly transformer models, have become foundational to NLP applications including machine translation, sentiment analysis, and question-answering systems. Within machine translation specifically, neural machine translation has superseded statistical approaches, while multilingual models now enable zero-shot cross-lingual transfer. Simultaneously, transformer-based language models have driven progress in broader artificial intelligence applications, from computer vision to reinforcement learning, demonstrating that architectural innovations in NLP often have cascading effects across the entire machine learning landscape.</td>
+                <td class="criteria">• Extracts both broad categories (machine learning, NLP, deep learning, artificial intelligence) and specific subtopics (transformer models, neural machine translation, sentiment analysis, computer vision)<br>• Avoids excessive duplication when broader and narrower concepts are mentioned together<br>• Returns results as a JSON array of strings</td>
+                <td class="output"><pre>```json
+[
+  "machine learning",
+  "natural language processing",
+  "deep learning architectures",
+  "transformer models",
+  "machine translation",
+  "sentiment analysis",
+  "question-answering systems",
+  "neural machine translation",
+  "statistical approaches",
+  "multilingual models",
+  "zero-shot cross-lingual transfer",
+  "transformer-based language models",
+  "artificial intelligence applications",
+  "computer vision",
+  "reinforcement learning"
+]
+```</pre></td>
+                <td class="score-col"><span class="score score-high">9</span></td>
+                <td class="reasoning">The solution meets all mandatory requirements: it contains a valid JSON array of strings, includes topics mentioned throughout the article, contains only topic names without commentary, and returns only the JSON array. It also satisfies the secondary criteria by extracting both broad and narrow concepts while avoiding redundant duplication. The inclusion of 'statistical approaches' is a minor issue since it's mentioned primarily as a contrasted/outdated approach rather than a topic being advanced, but this is a marginal concern. Overall, the extraction is thorough and well-balanced.</td>
+            </tr>
+        
+            <tr>
+                <td>Testing with a highly technical passage from a niche field (e.g., quantum computing or molecular biology) containing jargon and specialized terminology to ensure accurate topic extraction despite complexity</td>
+                <td class="prompt-inputs"><strong>content:</strong> Recent advances in quantum error correction have demonstrated substantial improvements in logical qubit fidelity through the implementation of surface codes with topological protection mechanisms. Our study employs a superconducting transmon qubit array coupled via tunable Josephson junctions, achieving a code distance of 5 with a physical qubit error rate of 10^-3. The syndrome extraction protocol utilizes ancilla-assisted parity measurements and real-time classical feedback to implement active error correction, resulting in a logical error rate of 2.1 × 10^-4 per round. We further investigate the effects of correlated errors and crosstalk in the two-dimensional lattice geometry, demonstrating that leakage errors to higher transmon levels can be mitigated through derivative removal by adiabatic gate (DRAG) pulse shaping. These results suggest that fault-tolerant quantum computation may be achievable with current superconducting platforms when combined with advanced pulse engineering and efficient classical processing.</td>
+                <td class="criteria">• Extracts all major technical topics including quantum error correction, surface codes, superconducting qubits, and fault tolerance<br>• Identifies specialized methodologies and techniques such as syndrome extraction, parity measurements, DRAG pulses, and topological protection<br>• Returns output as a valid JSON array of strings<br>• Avoids extracting generic terms while capturing domain-specific concepts essential to the niche field</td>
+                <td class="output"><pre>```json
+[
+  "quantum error correction",
+  "logical qubit fidelity",
+  "surface codes",
+  "topological protection mechanisms",
+  "superconducting transmon qubit array",
+  "tunable Josephson junctions",
+  "code distance",
+  "physical qubit error rate",
+  "syndrome extraction protocol",
+  "ancilla-assisted parity measurements",
+  "real-time classical feedback",
+  "active error correction",
+  "logical error rate",
+  "correlated errors",
+  "crosstalk",
+  "two-dimensional lattice geometry",
+  "leakage errors",
+  "derivative removal by adiabatic gate (DRAG) pulse shaping",
+  "fault-tolerant quantum computation",
+  "superconducting platforms",
+  "pulse engineering",
+  "classical processing"
+]
+```</pre></td>
+                <td class="score-col"><span class="score score-high">9</span></td>
+                <td class="reasoning">The solution fully satisfies all mandatory requirements: it is a valid JSON array of strings containing topics from the article with no extra commentary. Regarding secondary criteria, it successfully extracts all major technical topics and specialized methodologies as specified. The extraction demonstrates strong domain knowledge of quantum computing. While a few terms are slightly generic compared to the highly technical nature of the field, they are still relevant to the passage and don't significantly detract from the overall quality. The solution appropriately avoids extracting purely generic terms while maintaining focus on domain-specific concepts essential to quantum error correction research.</td>
+            </tr>
+        
+            </tbody>
+        </table>
+    </body>
+    </html>
+    

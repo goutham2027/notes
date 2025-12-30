@@ -1,0 +1,51 @@
+[
+  {
+    "prompt_inputs": {
+      "content": "The study of epigenetic mechanisms has revealed how environmental stressors such as malnutrition and chronic stress can alter DNA methylation patterns without changing the underlying genetic sequence. These modifications, observed in both animal models and human populations exposed to famine conditions, demonstrate reversible changes in gene expression that persist across generations. Furthermore, histone acetylation levels serve as biomarkers for cognitive decline in neurodegenerative diseases, suggesting that chromatin remodeling plays a crucial role in neuroplasticity. The implications extend to therapeutic interventions targeting these molecular mechanisms, with emerging evidence that certain dietary compounds can modulate epigenetic states and potentially reverse age-related phenotypes."
+    },
+    "solution_criteria": [
+      "Captures both explicitly stated topics (DNA methylation, histone acetylation, epigenetic mechanisms) and implicitly referenced topics inferred from context and examples (environmental stress effects, gene expression, neuroplasticity, therapeutic interventions, aging)",
+      "Returned as a valid JSON array of strings",
+      "Topics are distinct and avoid redundant or overly granular entries"
+    ],
+    "task_description": "\n    Extract topics out of a passage of text from a scholarly article into a JSON array of strings\n    ",
+    "scenario": "Testing with a passage containing implicit and explicit topics, where some subjects are directly stated while others must be inferred from context and examples"
+  },
+  {
+    "prompt_inputs": {
+      "content": "Recent neuroscientific investigations have illuminated the neural mechanisms underlying social cognition, particularly how the prefrontal cortex and amygdala interact during emotional regulation in interpersonal contexts. Simultaneously, sociological research demonstrates that cultural variations in attachment patterns significantly influence these neural pathways, suggesting a bidirectional relationship between brain structure and social norms. Furthermore, psychological studies on mirror neurons reveal how observational learning facilitates the internalization of group behaviors, while neuroimaging data indicates that individuals with higher social anxiety exhibit reduced activation in the ventromedial prefrontal cortex during peer interaction tasks. These findings collectively suggest that understanding human behavior requires integrating neuroscientific mechanisms, cultural sociological frameworks, and psychological principles of learning and emotion."
+    },
+    "solution_criteria": [
+      "Extracts distinct topics from psychology, neuroscience, and sociology domains",
+      "Returns output as a JSON array of strings",
+      "Captures domain-specific subjects without redundancy or over-fragmentation"
+    ],
+    "task_description": "\n    Extract topics out of a passage of text from a scholarly article into a JSON array of strings\n    ",
+    "scenario": "Testing with interdisciplinary passage containing mixed topics across psychology, neuroscience, and sociology to verify the prompt can identify and separate distinct domain-specific subjects"
+  },
+  {
+    "prompt_inputs": {
+      "content": "Recent advances in machine learning have revolutionized natural language processing, a subfield that encompasses multiple interconnected domains. Deep learning architectures, particularly transformer models, have become foundational to NLP applications including machine translation, sentiment analysis, and question-answering systems. Within machine translation specifically, neural machine translation has superseded statistical approaches, while multilingual models now enable zero-shot cross-lingual transfer. Simultaneously, transformer-based language models have driven progress in broader artificial intelligence applications, from computer vision to reinforcement learning, demonstrating that architectural innovations in NLP often have cascading effects across the entire machine learning landscape."
+    },
+    "solution_criteria": [
+      "Extracts both broad categories (machine learning, NLP, deep learning, artificial intelligence) and specific subtopics (transformer models, neural machine translation, sentiment analysis, computer vision)",
+      "Avoids excessive duplication when broader and narrower concepts are mentioned together",
+      "Returns results as a JSON array of strings"
+    ],
+    "task_description": "\n    Extract topics out of a passage of text from a scholarly article into a JSON array of strings\n    ",
+    "scenario": "Testing with a passage containing overlapping or hierarchical topics where broader categories and their specific subtopics appear together to verify the prompt handles relationships between concepts appropriately"
+  },
+  {
+    "prompt_inputs": {
+      "content": "Recent advances in quantum error correction have demonstrated substantial improvements in logical qubit fidelity through the implementation of surface codes with topological protection mechanisms. Our study employs a superconducting transmon qubit array coupled via tunable Josephson junctions, achieving a code distance of 5 with a physical qubit error rate of 10^-3. The syndrome extraction protocol utilizes ancilla-assisted parity measurements and real-time classical feedback to implement active error correction, resulting in a logical error rate of 2.1 \u00d7 10^-4 per round. We further investigate the effects of correlated errors and crosstalk in the two-dimensional lattice geometry, demonstrating that leakage errors to higher transmon levels can be mitigated through derivative removal by adiabatic gate (DRAG) pulse shaping. These results suggest that fault-tolerant quantum computation may be achievable with current superconducting platforms when combined with advanced pulse engineering and efficient classical processing."
+    },
+    "solution_criteria": [
+      "Extracts all major technical topics including quantum error correction, surface codes, superconducting qubits, and fault tolerance",
+      "Identifies specialized methodologies and techniques such as syndrome extraction, parity measurements, DRAG pulses, and topological protection",
+      "Returns output as a valid JSON array of strings",
+      "Avoids extracting generic terms while capturing domain-specific concepts essential to the niche field"
+    ],
+    "task_description": "\n    Extract topics out of a passage of text from a scholarly article into a JSON array of strings\n    ",
+    "scenario": "Testing with a highly technical passage from a niche field (e.g., quantum computing or molecular biology) containing jargon and specialized terminology to ensure accurate topic extraction despite complexity"
+  }
+]

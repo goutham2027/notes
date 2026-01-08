@@ -90,3 +90,8 @@ stop_sequence - claude has encountered one of your provided stop sequences
 - Tool built directly into claude
 - Allows claude to create, read and edit both directories and files
 - Only the JSON schema is build into Claude - you have to provide an implementation of the actual tool
+
+### The Web search tool
+- Search the web
+- Implementation exists
+CitationWebSearchResultLocation

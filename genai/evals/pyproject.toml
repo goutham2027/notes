@@ -10,6 +10,7 @@ dependencies = [
     "fastparquet>=2026.5.0",
     "ipdb>=0.13.13",
     "ipython>=9.14.0",
+    "matplotlib>=3.10.9",
     "mistralai>=2.4.8",
     "pandas>=3.0.3",
     "pyarrow>=24.0.0",

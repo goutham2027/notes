@@ -1,5 +1,5 @@
 Evaluating AI Agents - https://learn.deeplearning.ai/courses/evaluating-ai-agents/
-
+https://deepeval.com/
 https://arize.com/
 
 Evaluation Driven development

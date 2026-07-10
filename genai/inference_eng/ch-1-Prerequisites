@@ -1,0 +1,31 @@
+
+Before diving into inference eng, you need answers to 5 questions
+1. Which model(s)?
+2. What interface?
+3. What latency budget?
+4. What unit economics?
+5. What usage patterns?
+
+2 ways to add AI models to the product
+1. Shared inference
+2. Dedicated deployments
+
+
+Online vs Offline
+
+Latency vs throughput.
+Lower latencys makes your application faster, but higher throughput makes it cheaper at scale because we can use fewer GPUs for the same number of requests.
+
+Code completion, chat, voice agents -> are online apps that run in realtime and should be optimized for latency
+
+Offline jobs are better served by high throughput model deployments -> otpimized for good UX
+eg: Catalog transcription (podcasts or audito to make it searchable), Document processing (embedding, converting or analyzing docs on a regular cadence), corpus preparation (cleaning, embedding or preparing massive corpus for model training)
+
+
+It's possible to have a single model used for both online and offline jobs.
+eg: Whisper.
+online usecase: realtime dictation
+offline: batch transcription
+If both usecases have enough volume, it's more cost effective to create two separate deployments.
+one optimized for latency, the other for throughput.
+

@@ -29,3 +29,14 @@ offline: batch transcription
 If both usecases have enough volume, it's more cost effective to create two separate deployments.
 one optimized for latency, the other for throughput.
 
+Model evaluation / evals
+- practice of systematically measuring model intelligence
+- Be precise: focus evaluation on the hardest problems a model needs to solve
+
+Goodhart's law - when measure becomes a target, it ceases to be a good measure
+
+Fine tuning
+- adapting a pre-trained foundation model to a specific use case by introducing new data
+
+Distillation
+- process of 

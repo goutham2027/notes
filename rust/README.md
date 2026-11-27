@@ -54,3 +54,22 @@ let age = "age is 42";
 println!("{age}");
 let age: i32 = 24;
 ```
+
+### Functions
+```rust
+fn functionname(c: f64) -> f64 {}
+```
+
+### Conditionals
+```rust
+// 5 is not included
+for i in 1..5 {}
+
+// 5 is included
+for i in 1..=5 {}
+
+let names = vec!["a", "b", "c"];
+for name in &names {}
+
+for (i, name) in names.iter().enumerate() {}
+```

@@ -6,13 +6,14 @@ fn main() {
     // println!("{age}");
     // let mut age = 24;
     // age += 1;
-    // // let age: i32 = age.parse().unwrap
+    // let age = "53";
+    // let age: i32 = age.parse().unwrap();
     // println!("{age}")
     //
     // let f = fahrnenheit(100.0);
     // println!("{f}");
 
-    printnumbers(15);
+    // printnumbers(15);
 }
 
 fn fahrnenheit(c: f64) -> f64 {

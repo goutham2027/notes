@@ -53,6 +53,9 @@ Shadowing
 let age = "age is 42";
 println!("{age}");
 let age: i32 = 24;
+// let age = "53";
+// unwrap stops the program if the text is not a number
+// let age: i32 = age.parse().unwrap()
 ```
 
 ### Functions

@@ -76,3 +76,41 @@ for name in &names {}
 
 for (i, name) in names.iter().enumerate() {}
 ```
+
+### Types
+- Rust checks every type at the compile time.
+
+- signed integer - i8, i32, i64 - i32 is the default
+- unsigned integer - u8, u32, u64 - no negative values
+- float - f32, f64 - f64 is the default
+- boolean - true, false, type bool
+- character 'a' - type char. It is 4 bytes and holds one unicode character
+- checked_add returns Option: None on overflow.
+- wrapping_add wraps to 0.
+- saturating_add stays at 255.
+
+```
+// _ makes numbers easy to read
+let big: i64 = 3_000_000_000;
+println!(i64);
+
+7/2.0 is a compile error
+```
+
+### Tuples
+- holds a fixed number of values, the types can differ
+```rust
+let t = (1, "two", 3.0);
+let (a, b, c) = t
+    println!("{}", t.0)
+```
+
+### Arrays
+Arrays hold a fixed number of values. The type is same for all values.
+The length is part of the type
+```rust
+let arr: [i32; 3] = [10, 20, 30];
+println!("{} {}", arr[0], arr.len());
+```
+
+- use `as` for type conversion `avg as f64`
